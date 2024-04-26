@@ -1,0 +1,206 @@
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NF7884S');</script>
+<!-- End Google Tag Manager -->
+
+<!-- [Attributes by Finsweet] Disable scrolling -->
+<script defer src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-scrolldisable@1/scrolldisable.js"></script>
+
+
+<!-- Keep this css code to improve the font quality-->
+<style>
+  * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -o-font-smoothing: antialiased;
+}
+</style>
+
+
+
+<script>
+window.growthbook_config = window.growthbook_config || {};
+window.growthbook_config.attributes = {
+  "deviceId": "foo",
+  "company": "foo",
+  "loggedIn": true,
+  "employee": true,
+  "country": "foo",
+  "user_language": "foo",
+  "device_type": "foo",
+  "device_language": "foo",
+  "user_ip": "foo"
+};
+</script>
+
+<style>
+/* Style for disabling scroll */
+.disable-scroll {
+    overflow: hidden;
+}
+</style>
+
+<style>
+/* removing scroll bar(vertical) */
+::-webkit-scrollbar {
+  display:none;
+}
+</style>
+
+<style>
+@media screen and (max-width: 991px) { /* Adjusts for mobile landscape */
+  .tabs_menu-scroll-mobile {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS devices */
+    scrollbar-width: none; /* For Firefox */
+  }
+</style>
+
+<!-- Datadog Integration -->
+<script async src="https://www.datadoghq-browser-agent.com/datadog-rum.js"></script>
+
+
+<!-- Marketing and Affiliate Cookie-->
+
+<script>
+function loadScript(url, callback) {
+    var script = document.createElement('script');
+    script.onload = function() {
+        if (callback) callback();
+    };
+    script.src = url;
+    document.head.appendChild(script);
+}
+// Usage to load the js-cookie script
+loadScript("https://static.deriv.com/scripts/cookie.js", function() {
+    console.log('js-cookie loaded successfully!');
+});
+(function() {
+    // Function to dynamically load js-cookie
+    function loadJSCookie(callback) {
+        var script = document.createElement('script');
+        script.onload = function() {
+            if (callback) callback();
+        };
+        script.src = "https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js";
+        document.head.appendChild(script);
+    }
+    // Define your cookie storage and manipulation functions
+    function setupCookies() {
+        var deriv_cookie_domain = 'deriv.com'; // Modify as per your actual usage
+        var CookieStorage = function(cookie_name, cookie_domain = '') {
+            var hostname = window.location.hostname;
+            var is_deriv_com = hostname.includes('deriv.com');
+            this.initialized = false;
+            this.cookie_name = cookie_name;
+            this.domain = is_deriv_com ? deriv_cookie_domain : cookie_domain || hostname;
+            this.path = '/';
+            this.same_site = 'None';
+            this.is_secure = true;
+            this.expires = new Date('Thu, 1 Jan 2037 12:00:00 GMT');
+            this.value = {};
+        };
+        CookieStorage.prototype = {
+            initialize: function() {
+                var cookie_value = Cookies.get(this.cookie_name);
+                try {
+                    this.value = cookie_value ? JSON.parse(cookie_value) : {};
+                } catch (e) {
+                    this.value = {};
+                }
+                this.initialized = true;
+            },
+            write: function(val, expiry_date, is_secure, sameSite) {
+                if (!this.initialized) this.initialize();
+                this.value = val;
+                this.expires = expiry_date || this.expires;
+                Cookies.set(this.cookie_name, JSON.stringify(this.value), {
+                    expires: this.expires,
+                    path: this.path,
+                    domain: this.domain,
+                    secure: is_secure !== undefined ? is_secure : this.is_secure,
+                    sameSite: sameSite || this.same_site,
+                });
+            },
+            get: function(key) {
+                if (!this.initialized) this.initialize();
+                return this.value[key];
+            },
+            set: function(key, val, options) {
+                if (!this.initialized) this.initialize();
+                this.value[key] = val;
+                Cookies.set(this.cookie_name, JSON.stringify(this.value), {
+                    expires: this.expires,
+                    path: this.path,
+                    domain: this.domain,
+                    secure: options && options.secure !== undefined ? options.secure : this.is_secure,
+                    sameSite: options && options.sameSite || this.same_site,
+                    ...options,
+                });
+            },
+            remove: function() {
+                Cookies.remove(this.cookie_name, {
+                    path: this.path,
+                    domain: this.domain,
+                });
+            },
+        };
+        function getCookiesObject(cookies) {
+            var cookies_objects = {};
+            cookies.forEach(function(cookie_name) {
+                var cookie_object = new CookieStorage(cookie_name.includes('utm') ? 'utm_data' : cookie_name);
+                cookies_objects[cookie_name] = cookie_object;
+            });
+            return cookies_objects;
+        }
+        function getDataObjFromCookies(cookies, fields) {
+            var data = {};
+            fields.forEach(function(elem) {
+                if (cookies[elem] && cookies[elem].get(elem)) {
+                    data[elem] = cookies[elem].get(elem);
+                }
+            });
+            return data;
+        }
+        function getDataLink(data) {
+            var data_link = '';
+            Object.keys(data).forEach(function(elem) {
+                data_link += '&' + elem + '=' + encodeURIComponent(data[elem]);
+            });
+            return data_link;
+        }
+        function getCookiesFields() {
+            return [
+                'date_first_contact',
+                'signup_device',
+                'gclid',
+                'utm_source',
+                'utm_ad_id',
+                'utm_adgroup_id',
+                'utm_adrollclk_id',
+                'utm_campaign',
+                'utm_campaign_id',
+                'utm_content',
+                'utm_fbcl_id',
+                'utm_gl_client_id',
+                'utm_medium',
+                'utm_msclk_id',
+                'utm_term',
+            ];
+        }
+        // Example usage:
+        var exampleCookies = getCookiesObject(['utm_source', 'utm_campaign']);
+        var dataObj = getDataObjFromCookies(exampleCookies, getCookiesFields());
+        var dataLink = getDataLink(dataObj);
+        console.log(dataLink, 'dataLink');
+        console.log(dataObj,'dataObj' );
+    }
+    // Load js-cookie and setup cookies after it's loaded
+    loadJSCookie(setupCookies);
+})();
+</script>
