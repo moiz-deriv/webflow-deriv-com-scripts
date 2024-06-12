@@ -1,6 +1,5 @@
 {
-  "name": "custom-scripts-repo",
-  "private": true,
+  "name": "@deriv-com/custom-scripts",
   "version": "0.0.0-development",
   "files": [
     "dist"
