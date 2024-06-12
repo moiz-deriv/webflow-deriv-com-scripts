@@ -8,6 +8,9 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/github": "^10.0.6",
+    "@semantic-release/release-notes-generator": "^14.0.0",
     "autoprefixer": "^10.4.19",
     "cssnano": "^7.0.2",
     "rollup-plugin-postcss": "^4.0.2",
