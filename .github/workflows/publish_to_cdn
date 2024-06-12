@@ -35,13 +35,7 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      - name: Dry run to get the next release version
-        id: tag_version
-        run: |
-          export NEXT_TAG_VERSION=$(npx semantic-release --dry-run | grep 'The next release version is' | sed -E 's/.* ([[:digit:].]+)$/\1/')
-          echo "NEW_TAG_VERSION=${NEXT_TAG_VERSION}" >> $GITHUB_OUTPUT
-
+        
       - name: Semantic Release
         if: success()
         env:
@@ -49,15 +43,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
 
-      - name: Publish To R2
-        if: success()
-        uses: ryand56/r2-upload-action@latest
-        env:           
-          TAG_NAME: ${{ steps.tag_version.outputs.NEW_TAG_VERSION }}
-        with:
-          r2-account-id: ${{ secrets.R2_ACCOUNT_ID }}
-          r2-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
-          r2-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          r2-bucket: ${{ secrets.R2_BUCKET_NAME }}
-          source-dir: ./dist
-          destination-dir: ./${{ inputs.PROJECT_NAME }}/$TAG_NAME
