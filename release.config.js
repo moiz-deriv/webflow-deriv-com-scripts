@@ -3,13 +3,13 @@ const transform = require("./release.utils.cjs");
 module.exports = {
     branches: [
         "+([0-9])?(.{+([0-9]),x}).x",
-        "main",
+        "master",
         "next",
         "next-major",
         { name: "beta", prerelease: true },
         { name: "alpha", prerelease: true },
     ],
-    repositoryUrl: "git@github.com:deriv-com/ui.git",
+    repositoryUrl: "git@github.com:deriv-com/webflow-deriv-com-scripts.git",
     plugins: [
         [
             "@semantic-release/commit-analyzer",
