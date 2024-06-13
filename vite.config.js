@@ -11,7 +11,7 @@ export default defineConfig({
     },
     rollupOptions: {
       input: {
-        header_scripts: resolve(__dirname, "src/js/header/index.js"),
+        head_scripts: resolve(__dirname, "src/js/head/index.js"),
         footer_scripts: resolve(__dirname, "src/js/footer/index.js"),
         styles: resolve(__dirname, "src/css/index.css"),
       },
