@@ -1,4 +1,4 @@
-const transform = require("./release.utils.cjs");
+const transform = require("./release.utils.js");
 
 module.exports = {
     branches: [
