@@ -149,35 +149,36 @@ const COMMIT_HASH_LENGTH = 7;
  * @return {Object} the transformed commit.
  */
 const customTransform = (commit, context) => {
-    if (commit.notes) {
-        commit.notes.forEach((note) => {
+    const commitClone = { ...commit };
+    if (commitClone.notes) {
+        commitClone.notes.forEach((note) => {
             note.title = "Breaking changes";
         });
     }
 
     if (
-        types.types[commit.type] &&
-        (types.types[commit.type].changelog ||
-            (commit.notes && commit.notes.length > 0))
+        types.types[commitClone.type] &&
+        (types.types[commitClone.type].changelog ||
+            (commitClone.notes && commitClone.notes.length > 0))
     ) {
-        commit.type = `${
-            types.types[commit.type].emoji ? types.types[commit.type].emoji : ""
-        } \t ${types.types[commit.type].title}`;
+        commitClone.type = `${
+            types.types[commitClone.type].emoji ? types.types[commitClone.type].emoji : ""
+        } \t ${types.types[commitClone.type].title}`;
     } else {
         return null;
     }
 
-    if (commit.scope === "*") {
-        commit.scope = "";
+    if (commitClone.scope === "*") {
+        commitClone.scope = "";
     }
 
-    if (typeof commit.hash === "string") {
-        commit.shortHash = commit.hash.slice(0, COMMIT_HASH_LENGTH);
+    if (typeof commitClone.hash === "string") {
+        commitClone.shortHash = commitClone.hash.slice(0, COMMIT_HASH_LENGTH);
     }
 
     const references = [];
 
-    if (typeof commit.subject === "string") {
+    if (typeof commitClone.subject === "string") {
         let url = context.repository
             ? `${context.host}/${context.owner}/${context.repository}`
             : context.repoUrl;
@@ -185,7 +186,7 @@ const customTransform = (commit, context) => {
         if (url) {
             url += "/issues/";
             // Issue URLs.
-            commit.subject = commit.subject.replace(/#(\d+)/g, (_, issue) => {
+            commitClone.subject = commitClone.subject.replace(/#(\d+)/g, (_, issue) => {
                 references.push(issue);
                 return `[#${issue}](${url}${issue})`;
             });
@@ -193,16 +194,16 @@ const customTransform = (commit, context) => {
 
         if (context.host) {
             // User URLs.
-            commit.subject = commit.subject.replace(
+            commitClone.subject = commitClone.subject.replace(
                 /\B@([a-z0-9](?:-?[a-z0-9]){0,38})/g,
                 `[@$1](${context.host}/$1)`,
             );
         }
     }
 
-    if (commit.references) {
+    if (commitClone.references) {
         // Remove references that already appear in the subject
-        commit.references = commit.references.filter((reference) => {
+        commitClone.references = commitClone.references.filter((reference) => {
             if (!references.includes(reference.issue)) {
                 return true;
             }
@@ -211,7 +212,7 @@ const customTransform = (commit, context) => {
         });
     }
 
-    return commit;
+    return commitClone;
 };
 
 module.exports = customTransform;
