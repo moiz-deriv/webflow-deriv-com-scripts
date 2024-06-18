@@ -1,0 +1,8 @@
+.tabs_menu-scroll-mobile {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS devices */
+    scrollbar-width: none; /* For Firefox */
+  }
+  
