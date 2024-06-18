@@ -1,1 +1,7 @@
 /* All the css files should be imported here */
+
+@import './universal-styles/index.css';
+@import './header/index.css';
+@import './tabs/index.css';
+@import './scroll/index.css';
+
