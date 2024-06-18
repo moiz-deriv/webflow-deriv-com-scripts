@@ -2,6 +2,9 @@
   "name": "@deriv-com/custom-scripts",
   "version": "0.0.0-development",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist"
   ],
