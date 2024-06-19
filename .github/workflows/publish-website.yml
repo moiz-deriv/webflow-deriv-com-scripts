@@ -1,0 +1,42 @@
+name: Publish Site
+run-name: Runs the site publish action for ${{ github.event.inputs.environment }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      site_id:
+        description: 'Insert Site ID'
+        default: '65cf252c355bb0ab87269e04'
+        required: true
+        type: string
+      domain:
+        type: choice
+        description:  Select which domain to publish
+        options:
+        - 65fad28eed7a6248275d2fe7
+        - some-other-domain.webflow.io
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Trigger Webflow Publish
+      env:
+        WEBFLOW_API_TOKEN: ${{ secrets.WEBFLOW_API_TOKEN }}
+        SITE_TO_DEPLOY: ${{ github.event.inputs.domain }}
+        SITE_ID: ${{ github.event.inputs.site_id }}
+      run: |
+        curl -X POST "https://api.webflow.com/v2/sites/$SITE_ID/publish" \
+        -H "Authorization: Bearer $WEBFLOW_API_TOKEN" \
+        -H "Accept: application/json" \
+        -H "Content-Type: application/json" \
+        -d "{
+              \"publishToWebflowSubdomain\": false,
+              \"customDomains\": [
+                \"$SITE_TO_DEPLOY\"
+              ]
+            }"
