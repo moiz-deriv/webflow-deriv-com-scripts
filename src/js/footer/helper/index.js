@@ -20,16 +20,3 @@ window.enableButton = function(button) {
   button.disabled = false;
   button.style.opacity = '1';
 };
-
-window.getOauthUrl = function() {
-  var fullUrl = window.location.href;
-  var url = new URL(fullUrl);
-  var domain = url.hostname;
-  var validDomains = ['deriv.com', 'deriv.be', 'deriv.me'];
-
-  var matchedDomain = validDomains.find(validDomain => domain.endsWith(validDomain));
-
-  var oauthUrl = matchedDomain ? `https://oauth.${matchedDomain}` : `https://oauth.deriv.com`;
-
-  return oauthUrl;
-};
