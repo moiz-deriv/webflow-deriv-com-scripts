@@ -6,7 +6,7 @@ hideElems.forEach(array => {
         ? !array.countries.includes(clientsCountry)
         : array.countries.includes(clientsCountry);
 
-    if (array.id === 'hideDiel') {
+    if (!shouldHide) {
         document.querySelector('.footer_social-icons.diel').style.display = 'flex';
     }
 
