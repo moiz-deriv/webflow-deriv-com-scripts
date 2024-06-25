@@ -84,5 +84,4 @@ showElems.forEach(array => {
         });
     }
 });
-
 console.log('worked');
