@@ -1,5 +1,5 @@
 import { hideElems, showElems} from "./data.js";
-
+const clientsCountry = window.parseCookies(document.cookie, "clients_country");
 hideElems.forEach(array => {
     const shouldHide = array.id === 'hideDiel'
         ? !array.countries.includes(clientsCountry)
