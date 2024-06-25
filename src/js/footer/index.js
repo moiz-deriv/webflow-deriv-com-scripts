@@ -2,3 +2,4 @@
 import './helper';
 import './updateUrlAsPerLanguage'
 import './footerComponent/index.js';
+import './hide-deriv-go'
