@@ -6,14 +6,6 @@ hideElems.forEach(array => {
         ? !array.countries.includes(clientsCountry)
         : array.countries.includes(clientsCountry);
 
-    if (!shouldHide) {
-        const dielIcons = document.querySelector('.footer_social-icons.diel');
-
-        if (dielIcons) {
-            dielIcons.style.display = 'flex';
-        }
-    }
-
     if (clientsCountry && shouldHide) {
         array.selectors.forEach(selectorString => {
             const selectors = document.querySelectorAll(selectorString);
