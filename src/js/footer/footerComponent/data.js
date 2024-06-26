@@ -67,8 +67,7 @@ export const hideElems = [
     {
         id: 'hideDiel',
         selectors: [
-            '.footer_social-icons.diel',
-            '.footer_text.diel.w-richtext',
+            ".diel",
         ],
         countries: ["br", "uy", "lk", "ch", "za", "ec"],
     },
