@@ -21,7 +21,7 @@ hideElems.forEach((array) => {
   }
     const dielIcons = document.querySelector(".footer_social-icons.diel");
     if (dielIcons) {
-      dielIcons?.style?.display = "flex";
+      dielIcons.style.display = "flex";
     }
 });
 
