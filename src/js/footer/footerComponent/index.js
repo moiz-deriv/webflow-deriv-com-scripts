@@ -7,22 +7,28 @@ hideElems.forEach((array) => {
       ? !array.countries.includes(clientsCountry)
       : array.countries.includes(clientsCountry);
 
-  if (shouldHide) {
-    if (clientsCountry) {
-      return array.selectors.forEach((selectorString) => {
-        const selectors = document.querySelectorAll(selectorString);
-        selectors.forEach((selector) => {
-          if (selector) {
-            selector.style.display = "none";
-          }
-        });
+  if (clientsCountry && shouldHide) {
+    return array.selectors.forEach((selectorString) => {
+      const selectors = document.querySelectorAll(selectorString);
+      selectors.forEach((selector) => {
+        if (selector) {
+            if (array.id === 'w-dyn-item-p2p') {
+                const nestedElement = selector.querySelector('#card_block_p2p.help_category');
+                if (nestedElement) {
+                    selector.style.display = "none";
+                }
+            } else {
+                selector.style.display = "none";
+            }
+        }
       });
-    }
-  }
+    });
+  } else if (!shouldHide) {
     const dielIcons = document.querySelector(".footer_social-icons.diel");
     if (dielIcons) {
       dielIcons.style.display = "flex";
     }
+  }
 });
 
 showElems.forEach((array) => {
@@ -31,9 +37,9 @@ showElems.forEach((array) => {
       const selectors = document.querySelectorAll(selectorString);
       selectors.forEach((selector) => {
         if (selector) {
-        const page_wrapper = document.querySelector(".page-wrapper");
+          const page_wrapper = document.querySelector(".page-wrapper");
           if (selectorString === ".banner_disclaimer") {
-            page_wrapper.classList.add("disclaimer-show")
+            page_wrapper.classList.add("disclaimer-show");
             selector.classList.remove("hide-element");
           } else {
             selector.style.display = "block";
