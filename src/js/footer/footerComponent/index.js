@@ -1,34 +1,62 @@
 import { hideElems, showElems} from "./data.js";
 import { getCookieByKey } from '../cookies';
 const clientsCountry = getCookieByKey(document.cookie, "clients_country");
+
+const initialStates = {};
+
 hideElems.forEach(array => {
-    const shouldHide = array.id === 'hideDiel'
-        ? !array.countries.includes(clientsCountry)
-        : array.countries.includes(clientsCountry);
+    array.selectors.forEach(selectorString => {
+        const selectors = document.querySelectorAll(selectorString);
+        selectors.forEach(selector => {
+            initialStates[selectorString] = initialStates[selectorString] || [];
+            initialStates[selectorString].push(selector);
+        });
+    });
+});
 
-    if (array.id === 'hideDiel') {
-        document.querySelector('.footer_social-icons.diel').style.display = 'flex';
-    }
+function removeElements(selectors) {
+    selectors.forEach(selector => {
+        if (selector && selector.parentElement) {
+            selector.parentElement.removeChild(selector);
+        }
+    });
+}
 
-    if (clientsCountry && shouldHide) {
-        array.selectors.forEach(selectorString => {
-            const selectors = document.querySelectorAll(selectorString);
-            selectors.forEach(selector => {
-                if (selector) {
-                    if (array.id === 'w-dyn-item-p2p') {
-                        const nestedElement = selector.querySelector('#card_block_p2p.help_category');
-                        if (nestedElement) {
-                            selector.style.display = "none";
-                        }
-                    } else {
-                        selector.style.display = "none";
-                    }
-                }
-            });
+function restoreElements(selectors, containerSelector) {
+    const container = document.querySelector(containerSelector);
+    if (container) {
+        selectors.forEach(selector => {
+            if (selector) {
+                container.appendChild(selector);
+            }
         });
     }
-});
-console.log('worked');
+}
+
+function handleCountryChange(clientsCountry) {
+    hideElems.forEach(array => {
+        const shouldHide = array.id === 'hideDiel'
+            ? !array.countries.includes(clientsCountry)
+            : array.countries.includes(clientsCountry);
+
+        if (!shouldHide) {
+            document.querySelector('.footer_social-icons.diel').style.display = 'flex';
+        }
+
+        if (shouldHide) {
+            array.selectors.forEach(selectorString => {
+                removeElements(initialStates[selectorString]);
+            });
+        } else {
+            array.selectors.forEach(selectorString => {
+                restoreElements(initialStates[selectorString], 'body');
+            });
+        }
+    });
+}
+
+handleCountryChange(clientsCountry);
+
 showElems.forEach(array => {
     if (clientsCountry && array.countries.includes(clientsCountry)) {
         array.selectors.forEach(selectorString => {
