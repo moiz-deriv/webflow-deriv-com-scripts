@@ -78,6 +78,7 @@ export const showElems = [
         id: 'showElems',
         selectors: [
             '.banner_disclaimer',
+            '.diel',
         ],
         countries: ["br", "uy", "lk", "ch", "za", "ec"]
     },
