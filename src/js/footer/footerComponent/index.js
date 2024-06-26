@@ -31,7 +31,9 @@ showElems.forEach((array) => {
       const selectors = document.querySelectorAll(selectorString);
       selectors.forEach((selector) => {
         if (selector) {
+        const page_wrapper = document.querySelector(".page-wrapper");
           if (selectorString === ".banner_disclaimer") {
+            page_wrapper.classList.add("disclaimer-show")
             selector.classList.remove("hide-element");
           } else {
             selector.style.display = "block";
