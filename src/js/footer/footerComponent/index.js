@@ -17,7 +17,7 @@ hideElems.forEach((array) => {
                 if (nestedElement) {
                     selector.style.display = "none";
                 }
-            } else {
+            } else if(!selector.classList.contains('.diel')) {
                 selector.style.display = "none";
             }
         }
