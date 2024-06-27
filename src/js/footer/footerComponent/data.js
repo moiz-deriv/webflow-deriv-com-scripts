@@ -58,7 +58,7 @@ export const hideElems = [
     {
         id: 'hideRow',
         selectors: [
-            '.footer_social-icons',
+            '#footer_social-icons_row',
             '#footer_text_row',
             '.footer_risk-warning.w-richtext',
         ],
@@ -68,6 +68,7 @@ export const hideElems = [
         id: 'hideDiel',
         selectors: [
             "#footer_text_diel",
+            '#footer_social-icons_diel'
         ],
         countries: ["br", "uy", "lk", "ch", "za", "ec"],
     },
