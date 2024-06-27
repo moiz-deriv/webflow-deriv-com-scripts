@@ -4,7 +4,7 @@
 
 
   if (bannerDisclaimer) {
-    let resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver(entries => {
       for (let entry of entries) {
         if (entry.target === bannerDisclaimer) {
           if (pageWrapper) {
