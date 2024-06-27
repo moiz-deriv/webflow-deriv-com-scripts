@@ -19,4 +19,3 @@
 
     resizeObserver.observe(bannerDisclaimer);
   }
-});
