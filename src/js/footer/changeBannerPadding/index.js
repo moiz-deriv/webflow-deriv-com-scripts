@@ -1,5 +1,5 @@
 // Adding padding at the top when opening and closing a banner starts here
-  let bannerDisclaimer = document.querySelector('.banner_disclaimer');
+  const bannerDisclaimer = document.querySelector('.banner_disclaimer');
   let pageWrapper = document.querySelector('.page-wrapper');
 
 
