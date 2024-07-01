@@ -15,7 +15,7 @@ async function fetchCountryAndPopulateFooter() {
       const text = await response.text();
       const CloudflareCountry = Object.fromEntries(
         text.split("\n").map(v => v.split("=", 2))
-      ).loc;
+      ).loc.toLowerCase();
     
       if (CloudflareCountry !== clientsCountryFromCookie) {
         setCookie("clients_country", CloudflareCountry, 30);
