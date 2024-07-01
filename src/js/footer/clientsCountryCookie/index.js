@@ -3,7 +3,8 @@ const message = JSON.stringify({ website_status: 1 });
 const messageType = "website_status";
 
 const clientsCountry = getCookieByKey(document.cookie, "clients_country");
-if (!clientsCountry) {
+console.log("clientsCountry", clientsCountry);
+// if (!clientsCountry["clients_country"]) {
   window
     .socketMessageSend(message, messageType)
     .then((response) => {
@@ -12,4 +13,4 @@ if (!clientsCountry) {
     .catch((error) => {
       console.error("Error received:", error);
     });
-}
+// }
