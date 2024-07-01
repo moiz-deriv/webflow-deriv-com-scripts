@@ -17,7 +17,7 @@ export function getCookie(name) {
     }
     return null;
 }
-export  function getCookieByKey(cookieString, key) {
+export function getCookieByKey(cookieString, key) {
     const cookies = {};
     cookieString.split(';').forEach(cookie => {
       const [key, val] = cookie.split('=').map(c => c.trim());
@@ -27,4 +27,7 @@ export  function getCookieByKey(cookieString, key) {
   };
 export function setLanguageCookie(language) {
     setCookie('webflow-user-language', language, 30);
+}
+export function deleteCookie(name) {
+    document.cookie = name + '=; Max-Age=-99999999;';
 }
