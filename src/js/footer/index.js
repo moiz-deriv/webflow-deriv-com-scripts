@@ -5,3 +5,4 @@ import "./footerComponent/index.js";
 import "./dynamicCtaLabels/index.js";
 import "./hide-deriv-go";
 import "./changeBannerPadding";
+import "./closeMobileMenu";
