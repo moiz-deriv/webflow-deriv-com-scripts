@@ -38,6 +38,13 @@ window.getOauthUrl = function () {
   return oauthUrl;
 };
 
+window.deriv_com_url = "deriv.com";
+window.deriv_me_url = "deriv.me";
+window.deriv_be_url = "deriv.be";
+window.webflow_domain = "webflow.deriv.com";
+window.staging_url = "staging.deriv.com";
+window.staging_deriv_be_url = "staging.deriv.be";
+
 window.domain_list_app_id = {
   [window.deriv_com_url]: "16929",
   [window.deriv_me_url]: "1411",
@@ -45,13 +52,6 @@ window.domain_list_app_id = {
   [window.webflow_domain]: "53503",
   [window.staging_url]: "16303",
 };
-
-window.deriv_com_url = "deriv.com";
-window.deriv_me_url = "deriv.me";
-window.deriv_be_url = "deriv.be";
-window.webflow_domain = "webflow.deriv.com";
-window.staging_url = "staging.deriv.com";
-window.staging_deriv_be_url = "staging.deriv.be";
 
 window.getDomain = () => {
   var currentUrl = window.location.href;
