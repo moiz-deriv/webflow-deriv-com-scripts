@@ -1,3 +1,5 @@
+import { getCookieByKey } from "../cookies";
+
 window.establishWebSocketConnection = () => {
   return new Promise((resolve, reject) => {
     const langCookie = getCookieByKey(document.cookie, "webflow-user-language");
