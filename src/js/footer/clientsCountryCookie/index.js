@@ -4,10 +4,6 @@ import populateFooterComponent from "../footerComponent";
 const message = JSON.stringify({ website_status: 1 });
 const messageType = "website_status";
 
-const clientsCountryFromCookie = getCookieByKey(
-  document.cookie,
-  "clients_country"
-);
 
 async function fetchCountryAndPopulateFooter() {
   try {
@@ -16,7 +12,10 @@ async function fetchCountryAndPopulateFooter() {
     const CloudflareCountry = Object.fromEntries(
       text.split("\n").map((v) => v.split("=", 2))
     ).loc.toLowerCase();
-
+    const clientsCountryFromCookie = getCookieByKey(
+        document.cookie,
+        "clients_country"
+      );
     if (CloudflareCountry !== clientsCountryFromCookie) {
       deleteCookie("clients_country");
       setCookie("clients_country", CloudflareCountry, 30);
@@ -32,6 +31,10 @@ fetchCountryAndPopulateFooter();
 window
   .socketMessageSend(message, messageType)
   .then((response) => {
+    const clientsCountryFromCookie = getCookieByKey(
+        document.cookie,
+        "clients_country"
+      );
     if (clientsCountryFromCookie !== response.website_status.clients_country) {
       deleteCookie("clients_country");
       setCookie("clients_country", response.website_status.clients_country, 30);
