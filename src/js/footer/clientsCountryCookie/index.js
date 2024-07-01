@@ -4,7 +4,6 @@ const messageType = "website_status";
 
 const clientsCountry = getCookieByKey(document.cookie, "clients_country");
 console.log("clientsCountry", clientsCountry);
-// if (!clientsCountry["clients_country"]) {
   window
     .socketMessageSend(message, messageType)
     .then((response) => {
@@ -13,4 +12,3 @@ console.log("clientsCountry", clientsCountry);
     .catch((error) => {
       console.error("Error received:", error);
     });
-// }
