@@ -16,13 +16,10 @@ async function fetchCountryAndPopulateFooter() {
       const CloudflareCountry = Object.fromEntries(
         text.split("\n").map(v => v.split("=", 2))
       ).loc;
-  
-      const clientsCountryFromCookie = getCookie("clients_country");
-  
+    
       if (CloudflareCountry !== clientsCountryFromCookie) {
         setCookie("clients_country", CloudflareCountry, 30);
       }
-  
       populateFooterComponent();
     } catch (error) {
       console.error('Error:', error);
