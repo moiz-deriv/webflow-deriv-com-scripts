@@ -7,3 +7,4 @@ import "./updateUrlAsPerLanguage";
 import "./dynamicCtaLabels/index.js";
 import "./hide-deriv-go";
 import "./changeBannerPadding";
+import "./closeMobileMenu";
