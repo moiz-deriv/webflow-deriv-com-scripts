@@ -9,9 +9,10 @@ if (bannerDisclaimer) {
         let boundingRect = entry.target.getBoundingClientRect();
         if (mainWrapper) {
           mainWrapper.style.paddingTop = boundingRect.height + "px";
-        } else {
-          document.body.style.paddingTop = boundingRect.height + "px";
-        }
+        } 
+        // else {
+        //   document.body.style.paddingTop = boundingRect.height + "px";
+        // }
       }
     }
   });
