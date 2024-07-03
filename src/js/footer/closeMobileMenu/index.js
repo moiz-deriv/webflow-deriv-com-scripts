@@ -2,6 +2,10 @@
 window.addEventListener('pageshow', function (event) {
   // Checking if the page was loaded from the cache
   if (event.persisted) {
-    document.querySelector('body').click();
+    const mobileMenu = document.querySelector('.w-nav-overlay');
+  	if (mobileMenu) {
+      mobileMenu.style.display = 'none';
+   		document.querySelector('body').click();
+    }
   }
 });
