@@ -1,0 +1,43 @@
+name: Create Sitemap for all the domains and Upload to R2
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_domain:
+        description: "Base domain name"
+        default: "deriv.com"
+        required: true
+        type: string
+
+jobs:
+  update-sitemap:
+    runs-on: ubuntu-latest
+    env:
+        BASE_DOMAIN: ${{ github.event.inputs.base_domain }}
+    steps:
+
+      - name: Download sitemap.xml
+        run: curl -O https://$BASE_DOMAIN/sitemap.xml
+
+      - name: Replace URLs and create directories
+        env:
+          DOMAIN_LIST: "https://deriv.com,https://deriv.be,https://deriv.me"
+        run: |
+          IFS=',' read -r -a domains <<< "$DOMAIN_LIST"
+          for domain in "${domains[@]}"; do
+            domain_name=$(echo $domain | sed 's|https://||g')
+            mkdir -p $domain_name
+            cp sitemap.xml $domain_name/sitemap.xml
+            sed -i -e "s|https://$BASE_DOMAIN/|$domain|g" $domain_name/sitemap.xml
+          done
+          rm sitemap.xml
+
+      - name: R2 Upload Action to upload translations to Cloudflare
+        uses: ryand56/r2-upload-action@latest
+        with:
+          r2-account-id: ${{ secrets.R2_ACCOUNT_ID }}
+          r2-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
+          r2-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          r2-bucket: ${{ secrets.R2_BUCKET_NAME }}
+          source-dir: .
+          destination-dir: ./deriv-com-sitemaps
