@@ -44,8 +44,8 @@ function updateSitemap(inputFile, newSitemapUrl, outputFile) {
   .help()
   .alias("help", "h").argv;
   if (process.argv.length !== 4) {
-    console.error('Usage: node update_robots.js <input_file> <new_sitemap_url>');
-    process.exit(1);
+    console.error("process.argv.length: ", process.argv.length);
+ 
   }
 
   const inputFile = process.argv['input-file'];
