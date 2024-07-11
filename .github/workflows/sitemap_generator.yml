@@ -1,0 +1,49 @@
+name: Create Sitemap for all the domains and Upload to R2
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-sitemap:
+    runs-on: ubuntu-latest
+    env:
+      BASE_DOMAIN: https://webflow.deriv.com
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+      - name: Install yargs
+        run: npm install yargs
+
+      - name: Download sitemap.xml
+        run: | 
+          curl -O $BASE_DOMAIN/sitemap.xml -O $BASE_DOMAIN/robots.txt
+
+      - name: Replace sitemap URLs and create directories
+        env:
+          DOMAIN_LIST: "https://deriv.com,https://deriv.be,https://deriv.me"
+        run: |
+          IFS=',' read -r -a domains <<< "$DOMAIN_LIST"
+          for domain in "${domains[@]}"; do
+            domain_name=$(echo $domain | sed 's|https://||g')
+            mkdir -p $domain_name
+            cp sitemap.xml $domain_name/sitemap.xml
+            cp robots.txt $domain_name/robots.txt
+            node .github/workflows/modify_sitemap.js --new-domain $domain_name --input-file $domain_name/sitemap.xml
+            node .github/workflows/modify_robots.txt --sitemap-url $domain_name --input-file $domain_name/robots.txt
+          done
+          rm sitemap.xml robots.txt
+
+      - name: R2 Upload Action to upload translations to Cloudflare
+        uses: ryand56/r2-upload-action@latest
+        with:
+          r2-account-id: ${{ secrets.R2_ACCOUNT_ID }}
+          r2-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
+          r2-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          r2-bucket: ${{ secrets.R2_BUCKET_NAME }}
+          source-dir: .
+          destination-dir: ./
