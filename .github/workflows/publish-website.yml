@@ -4,10 +4,6 @@ run-name: Runs the site publish action for multiple domains
 on:
   workflow_dispatch:
     inputs:
-      site_label_webflow_copy:
-        type: boolean
-        description: 'webflow-copy.deriv.com'
-        default: false
       site_label_staging_webflow:
         type: boolean
         description: 'staging-webflow.deriv.com'
@@ -37,26 +33,9 @@ jobs:
         id: map-site-ids
         env:
           WEBFLOW_API_TOKEN: ${{ secrets.WEBFLOW_API_TOKEN }}
+          SITE_ID: ${{ secrets.SITE_ID }}
         run: |
-          declare -A SITE_IDS
-          declare -A SITE_DEPLOY_IDS
-
-          SITE_IDS["webflow-copy.deriv.com"]="65cf252c355bb0ab87269e04"
-          SITE_DEPLOY_IDS["webflow-copy.deriv.com"]="65fad28eed7a6248275d2fe7"
-          SITE_IDS["staging-webflow.deriv.com"]="456y456y456y"
-          SITE_DEPLOY_IDS["staging-webflow.deriv.com"]="yyyyy"
-          SITE_IDS["deriv.com"]="789z789z789z"
-          SITE_DEPLOY_IDS["deriv.com"]="aaaaa"
-          SITE_IDS["deriv.me"]="101w101w101w"
-          SITE_DEPLOY_IDS["deriv.me"]="bbbbb"
-          SITE_IDS["deriv.be"]="111v111v111v"
-          SITE_DEPLOY_IDS["deriv.be"]="ccccc"
-
           SITES_TO_PUBLISH=()
-
-          if [ "${{ github.event.inputs.site_label_webflow_copy }}" == "true" ]; then
-            SITES_TO_PUBLISH+=("webflow-copy.deriv.com")
-          fi
           if [ "${{ github.event.inputs.site_label_staging_webflow }}" == "true" ]; then
             SITES_TO_PUBLISH+=("staging-webflow.deriv.com")
           fi
@@ -69,10 +48,7 @@ jobs:
           if [ "${{ github.event.inputs.site_label_deriv_be }}" == "true" ]; then
             SITES_TO_PUBLISH+=("deriv.be")
           fi
-
-          for site in "${SITES_TO_PUBLISH[@]}"; do
-            SITE_ID=${SITE_IDS[$site]}
-            SITE_TO_DEPLOY=${SITE_DEPLOY_IDS[$site]}
+            SITES_ARRAY="[$(IFS=,; echo "${SITES_TO_PUBLISH[*]}")]"  
             echo "Publishing to $site"
             RESPONSE=$(curl -s -o response_${site//./_}.txt -w "%{http_code}" -X POST "https://api.webflow.com/v2/sites/$SITE_ID/publish" \
               -H "Authorization: Bearer $WEBFLOW_API_TOKEN" \
@@ -80,9 +56,7 @@ jobs:
               -H "Content-Type: application/json" \
               -d "{
                     \"publishToWebflowSubdomain\": false,
-                    \"customDomains\": [
-                      \"$SITE_TO_DEPLOY\"
-                    ]
+                    \"customDomains\": $SITES_ARRAY,
                   }")
             if [ $RESPONSE -ne 202 ]; then
               echo "Webflow Publish to $site failed with status $RESPONSE"
@@ -91,33 +65,15 @@ jobs:
             else
               echo "Webflow Publish to $site succeeded"
             fi
-          done
-
-      - name: Send Slack Notification
-        if: always()
-        uses: slackapi/slack-github-action@6c661ce58804a1a20f6dc5fbee7f0381b469e001 # v1.25.0
-        with:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ${{ toJSON(env.MESSAGE) }}
-                  }
-                }
-              ]
-            }
-        env:
-          MESSAGE: |
-            STATUS="succeeded"
-            for site in "${SITES_TO_PUBLISH[@]}"; do
-              RESPONSE_FILE="response_${site//./_}.txt"
-              if grep -q '"published":false' $RESPONSE_FILE; then
-                STATUS="failed"
-                break
-              fi
-            done
-            echo "Webflow publish to (${SITES_TO_PUBLISH[*]}) ${STATUS}."
+  send_slack_success:
+        name: Send Release Slack notification success
+        runs-on: ubuntu-latest
+        if: success()
+        needs: [publish]
+        steps:
+          - name: Send Slack Notification
+            uses: "deriv-com/shared-actions/.github/actions/send_slack_notification@master"
+            with:
+              SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+              MESSAGE: "Release succeeded for ${SITES_TO_PUBLISH} with version ${{ needs.build_test_and_publish.outputs.RELEASE_VERSION }}"
+    
