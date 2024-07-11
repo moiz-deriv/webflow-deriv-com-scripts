@@ -1,12 +1,11 @@
-const fs = require('fs');
+const fs = require("fs");
 const yargs = require("yargs");
 
-
 // Function to update Sitemap entry in robots.txt
-function updateSitemap(inputFile, newSitemapUrl, outputFile) {
-  fs.readFile(inputFile, 'utf8', (err, data) => {
+function updateSitemap(inputFile, newSitemapUrl) {
+  fs.readFile(inputFile, "utf8", (err, data) => {
     if (err) {
-      console.error('Error reading the file:', err);
+      console.error("Error reading the file:", err);
       return;
     }
 
@@ -17,18 +16,17 @@ function updateSitemap(inputFile, newSitemapUrl, outputFile) {
       newContent = data + `\nSitemap: ${newSitemapUrl}`;
     }
 
-    fs.writeFile(outputFile, newContent, 'utf8', (err) => {
+    fs.writeFile(inputFile, newContent, "utf8", (err) => {
       if (err) {
-        console.error('Error writing the file:', err);
+        console.error("Error writing the file:", err);
         return;
       }
-      console.log('Sitemap entry has been updated in', outputFile);
+      console.log("Sitemap entry has been updated in", inputFile);
     });
   });
 }
 
-
-  const argv = yargs
+const argv = yargs
   .option("sitemap-url", {
     alias: "s",
     description: "The new domain to replace in the sitemap",
@@ -43,12 +41,12 @@ function updateSitemap(inputFile, newSitemapUrl, outputFile) {
   })
   .help()
   .alias("help", "h").argv;
-  if (process.argv.length !== 4) {
-    console.error("process.argv.length: ", process.argv.length);
- 
-  }
-
-  const inputFile = process.argv['input-file'];
-  const newSitemapUrl = process.argv['sitemap-url'];
-
-  updateSitemap(inputFile, newSitemapUrl, inputFile);
+if (process.argv.length !== 6) {
+  console.error(
+    "Usage: node update_robots.js <robots_url> <new_sitemap_url>"
+  );
+  process.exit(1);
+}
+const inputFile = argv["input-file"];
+const newSitemapUrl = argv["sitemap-url"];
+updateSitemap(inputFile, newSitemapUrl);
