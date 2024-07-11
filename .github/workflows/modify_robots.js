@@ -27,8 +27,7 @@ function updateSitemap(inputFile, newSitemapUrl, outputFile) {
   });
 }
 
-// Main function to execute the script
-function main() {
+
   const argv = yargs
   .option("sitemap-url", {
     alias: "s",
@@ -53,6 +52,3 @@ function main() {
   const newSitemapUrl = process.argv['sitemap-url'];
 
   updateSitemap(inputFile, newSitemapUrl, inputFile);
-}
-
-main();
