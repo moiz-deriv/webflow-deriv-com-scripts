@@ -2,22 +2,25 @@ name: Create Sitemap for all the domains and Upload to R2
 
 on:
   workflow_dispatch:
-    inputs:
-      base_domain:
-        description: "Base domain name"
-        default: "deriv.com"
-        required: true
-        type: string
 
 jobs:
   update-sitemap:
     runs-on: ubuntu-latest
     env:
-        BASE_DOMAIN: ${{ github.event.inputs.base_domain }}
+      BASE_DOMAIN: https://webflow.deriv.com
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+      - name: Install yargs
+        run: npm install yargs
 
       - name: Download sitemap.xml
-        run: curl -O https://$BASE_DOMAIN/sitemap.xml
+        run: curl -O $BASE_DOMAIN/sitemap.xml
 
       - name: Replace URLs and create directories
         env:
@@ -28,7 +31,7 @@ jobs:
             domain_name=$(echo $domain | sed 's|https://||g')
             mkdir -p $domain_name
             cp sitemap.xml $domain_name/sitemap.xml
-            sed -i -e "s|https://$BASE_DOMAIN/|$domain|g" $domain_name/sitemap.xml
+            node .github/workflows/modify_sitemap.js --new-domain $domain_name --input-file $domain_name/sitemap.xml
           done
           rm sitemap.xml
 
