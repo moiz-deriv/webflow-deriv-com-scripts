@@ -1,42 +1,123 @@
 name: Publish Site
-run-name: Runs the site publish action for ${{ github.event.inputs.environment }}
+run-name: Runs the site publish action for multiple domains
 
 on:
   workflow_dispatch:
     inputs:
-      site_id:
-        description: 'Insert Site ID'
-        default: '65cf252c355bb0ab87269e04'
-        required: true
-        type: string
-      domain:
-        type: choice
-        description:  Select which domain to publish
-        options:
-        - 65fad28eed7a6248275d2fe7
-        - some-other-domain.webflow.io
+      site_label_webflow_copy:
+        type: boolean
+        description: 'webflow-copy.deriv.com'
+        default: false
+      site_label_staging_webflow:
+        type: boolean
+        description: 'staging-webflow.deriv.com'
+        default: false
+      site_label_deriv_com:
+        type: boolean
+        description: 'deriv.com'
+        default: false
+      site_label_deriv_me:
+        type: boolean
+        description: 'deriv.me'
+        default: false
+      site_label_deriv_be:
+        type: boolean
+        description: 'deriv.be'
+        default: false
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Trigger Webflow Publish
-      env:
-        WEBFLOW_API_TOKEN: ${{ secrets.WEBFLOW_API_TOKEN }}
-        SITE_TO_DEPLOY: ${{ github.event.inputs.domain }}
-        SITE_ID: ${{ github.event.inputs.site_id }}
-      run: |
-        curl -X POST "https://api.webflow.com/v2/sites/$SITE_ID/publish" \
-        -H "Authorization: Bearer $WEBFLOW_API_TOKEN" \
-        -H "Accept: application/json" \
-        -H "Content-Type: application/json" \
-        -d "{
-              \"publishToWebflowSubdomain\": false,
-              \"customDomains\": [
-                \"$SITE_TO_DEPLOY\"
+      - name: Map site labels to site IDs and deploy
+        id: map-site-ids
+        env:
+          WEBFLOW_API_TOKEN: ${{ secrets.WEBFLOW_API_TOKEN }}
+        run: |
+          declare -A SITE_IDS
+          declare -A SITE_DEPLOY_IDS
+
+          SITE_IDS["webflow-copy.deriv.com"]="65cf252c355bb0ab87269e04"
+          SITE_DEPLOY_IDS["webflow-copy.deriv.com"]="65fad28eed7a6248275d2fe7"
+          SITE_IDS["staging-webflow.deriv.com"]="456y456y456y"
+          SITE_DEPLOY_IDS["staging-webflow.deriv.com"]="yyyyy"
+          SITE_IDS["deriv.com"]="789z789z789z"
+          SITE_DEPLOY_IDS["deriv.com"]="aaaaa"
+          SITE_IDS["deriv.me"]="101w101w101w"
+          SITE_DEPLOY_IDS["deriv.me"]="bbbbb"
+          SITE_IDS["deriv.be"]="111v111v111v"
+          SITE_DEPLOY_IDS["deriv.be"]="ccccc"
+
+          SITES_TO_PUBLISH=()
+
+          if [ "${{ github.event.inputs.site_label_webflow_copy }}" == "true" ]; then
+            SITES_TO_PUBLISH+=("webflow-copy.deriv.com")
+          fi
+          if [ "${{ github.event.inputs.site_label_staging_webflow }}" == "true" ]; then
+            SITES_TO_PUBLISH+=("staging-webflow.deriv.com")
+          fi
+          if [ "${{ github.event.inputs.site_label_deriv_com }}" == "true" ]; then
+            SITES_TO_PUBLISH+=("deriv.com")
+          fi
+          if [ "${{ github.event.inputs.site_label_deriv_me }}" == "true" ]; then
+            SITES_TO_PUBLISH+=("deriv.me")
+          fi
+          if [ "${{ github.event.inputs.site_label_deriv_be }}" == "true" ]; then
+            SITES_TO_PUBLISH+=("deriv.be")
+          fi
+
+          for site in "${SITES_TO_PUBLISH[@]}"; do
+            SITE_ID=${SITE_IDS[$site]}
+            SITE_TO_DEPLOY=${SITE_DEPLOY_IDS[$site]}
+            echo "Publishing to $site"
+            RESPONSE=$(curl -s -o response_${site//./_}.txt -w "%{http_code}" -X POST "https://api.webflow.com/v2/sites/$SITE_ID/publish" \
+              -H "Authorization: Bearer $WEBFLOW_API_TOKEN" \
+              -H "Accept: application/json" \
+              -H "Content-Type: application/json" \
+              -d "{
+                    \"publishToWebflowSubdomain\": false,
+                    \"customDomains\": [
+                      \"$SITE_TO_DEPLOY\"
+                    ]
+                  }")
+            if [ $RESPONSE -ne 202 ]; then
+              echo "Webflow Publish to $site failed with status $RESPONSE"
+              cat response_${site//./_}.txt
+              exit 1
+            else
+              echo "Webflow Publish to $site succeeded"
+            fi
+          done
+
+      - name: Send Slack Notification
+        if: always()
+        uses: slackapi/slack-github-action@6c661ce58804a1a20f6dc5fbee7f0381b469e001 # v1.25.0
+        with:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ${{ toJSON(env.MESSAGE) }}
+                  }
+                }
               ]
-            }"
+            }
+        env:
+          MESSAGE: |
+            STATUS="succeeded"
+            for site in "${SITES_TO_PUBLISH[@]}"; do
+              RESPONSE_FILE="response_${site//./_}.txt"
+              if grep -q '"published":false' $RESPONSE_FILE; then
+                STATUS="failed"
+                break
+              fi
+            done
+            echo "Webflow publish to (${SITES_TO_PUBLISH[*]}) ${STATUS}."
