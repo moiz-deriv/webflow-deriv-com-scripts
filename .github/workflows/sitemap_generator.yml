@@ -27,15 +27,15 @@ jobs:
         env:
           DOMAIN_LIST: "https://deriv.com,https://deriv.be,https://deriv.me"
         run: |
+          mkdir content
           IFS=',' read -r -a domains <<< "$DOMAIN_LIST"
           for domain in "${domains[@]}"; do
             domain_name=$(echo $domain | sed 's|https://||g')
-            mkdir content && cd content
-            mkdir -p $domain_name
-            cp ../sitemap.xml $domain_name/sitemap.xml
-            cp ../robots.txt $domain_name/robots.txt
-            node .github/workflows/modify_sitemap.js --new-domain $domain_name --input-file $domain_name/sitemap.xml
-            node .github/workflows/modify_robots.js --sitemap-url $domain_name --input-file $domain_name/robots.txt
+            mkdir -p content/$domain_name
+            cp sitemap.xml content/$domain_name/sitemap.xml
+            cp robots.txt content/$domain_name/robots.txt
+            node .github/workflows/modify_sitemap.js --new-domain $domain_name --input-file content/$domain_name/sitemap.xml
+            node .github/workflows/modify_robots.js --sitemap-url $domain_name --input-file content/$domain_name/robots.txt
           done
           rm sitemap.xml robots.txt
 
