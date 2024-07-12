@@ -24,7 +24,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-
+    outputs:
+      SITES_ARRAY: ${{ steps.map-site-ids.outputs.SITES_ARRAY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -37,18 +38,18 @@ jobs:
         run: |
           SITES_TO_PUBLISH=()
           if [ "${{ github.event.inputs.site_label_staging_webflow }}" == "true" ]; then
-            SITES_TO_PUBLISH+=("staging-webflow.deriv.com")
+            SITES_TO_PUBLISH+=("\"staging-webflow.deriv.com\"")
           fi
           if [ "${{ github.event.inputs.site_label_deriv_com }}" == "true" ]; then
-            SITES_TO_PUBLISH+=("deriv.com")
+            SITES_TO_PUBLISH+=("\"deriv.com\"")
           fi
           if [ "${{ github.event.inputs.site_label_deriv_me }}" == "true" ]; then
-            SITES_TO_PUBLISH+=("deriv.me")
+            SITES_TO_PUBLISH+=("\"deriv.me\"")
           fi
           if [ "${{ github.event.inputs.site_label_deriv_be }}" == "true" ]; then
-            SITES_TO_PUBLISH+=("deriv.be")
+            SITES_TO_PUBLISH+=("\"deriv.be\"")
           fi
-            SITES_ARRAY="[$(IFS=,; echo "${SITES_TO_PUBLISH[*]}")]"  
+            SITES_ARRAY="[$(IFS=,; echo "${SITES_TO_PUBLISH[*]}")]" >> $GITHUB_OUTPUT 
             echo "Publishing to $site"
             RESPONSE=$(curl -s -o response_${site//./_}.txt -w "%{http_code}" -X POST "https://api.webflow.com/v2/sites/$SITE_ID/publish" \
               -H "Authorization: Bearer $WEBFLOW_API_TOKEN" \
@@ -75,5 +76,5 @@ jobs:
             uses: "deriv-com/shared-actions/.github/actions/send_slack_notification@master"
             with:
               SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-              MESSAGE: "Release succeeded for ${SITES_TO_PUBLISH} with version ${{ needs.build_test_and_publish.outputs.RELEASE_VERSION }}"
+              MESSAGE: "Release succeeded for ${{ needs.publish.outputs.SITES_ARRAY }}"
     
