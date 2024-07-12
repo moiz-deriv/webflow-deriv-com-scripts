@@ -11,11 +11,17 @@ function updateSitemap(inputFile, newSitemapUrl) {
 
     let newContent;
     if (data.match(/^Sitemap:/m)) {
-      newContent = data.replace(/^Sitemap: .*/m, `Sitemap: ${newSitemapUrl}`);
+      newContent = data.replace(
+        /^Sitemap: .*/m,
+        `Sitemap: https://seo.deriv.com/${newSitemapUrl}/sitemap.xml`
+      );
     } else {
-      newContent = data + `\nSitemap: ${newSitemapUrl}`;
+      newContent =
+        data + `\nSitemap: https://seo.deriv.com/${newSitemapUrl}/sitemap.xml`;
     }
-
+    if (data.match(/^Host:/m)) {
+      newContent = data.replace(/^Host:/m, `Host: https://${newSitemapUrl}`);
+    }
     fs.writeFile(inputFile, newContent, "utf8", (err) => {
       if (err) {
         console.error("Error writing the file:", err);
@@ -42,9 +48,7 @@ const argv = yargs
   .help()
   .alias("help", "h").argv;
 if (process.argv.length !== 6) {
-  console.error(
-    "Usage: node update_robots.js <robots_url> <new_sitemap_url>"
-  );
+  console.error("Usage: node update_robots.js <robots_url> <new_sitemap_url>");
   process.exit(1);
 }
 const inputFile = argv["input-file"];
