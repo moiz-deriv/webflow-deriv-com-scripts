@@ -30,6 +30,7 @@ jobs:
           IFS=',' read -r -a domains <<< "$DOMAIN_LIST"
           for domain in "${domains[@]}"; do
             domain_name=$(echo $domain | sed 's|https://||g')
+            mkdir content && cd content
             mkdir -p $domain_name
             cp sitemap.xml $domain_name/sitemap.xml
             cp robots.txt $domain_name/robots.txt
@@ -45,5 +46,5 @@ jobs:
           r2-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
           r2-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           r2-bucket: ${{ secrets.R2_BUCKET_NAME }}
-          source-dir: .
+          source-dir: ./content
           destination-dir: .
