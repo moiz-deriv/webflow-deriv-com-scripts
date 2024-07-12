@@ -1,10 +1,10 @@
-name: Create Sitemap for all the domains and Upload to R2
+name: Create Sitemap.xml and robots.txt for all the domains and Upload to R2
 
 on:
   workflow_dispatch:
 
 jobs:
-  update-sitemap:
+  update-sitemap-and-robots:
     runs-on: ubuntu-latest
     env:
       BASE_DOMAIN: https://webflow.deriv.com
