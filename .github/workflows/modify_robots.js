@@ -20,7 +20,7 @@ function updateSitemap(inputFile, newSitemapUrl) {
         data + `\nSitemap: https://seo.deriv.com/${newSitemapUrl}/sitemap.xml`;
     }
     if (data.match(/^Host:/m)) {
-      newContent = data.replace(/^Host: .*/m, `Host: https://${newSitemapUrl}`);
+      newContent = newContent.replace(/^Host: .*/m, `Host: https://${newSitemapUrl}`);
     }
     fs.writeFile(inputFile, newContent, "utf8", (err) => {
       if (err) {
