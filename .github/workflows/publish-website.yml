@@ -8,6 +8,10 @@ on:
         type: boolean
         description: 'staging-webflow.deriv.com'
         default: false
+      site_label_webflow:
+        type: boolean
+        description: 'webflow.deriv.com'
+        default: false
       site_label_deriv_com:
         type: boolean
         description: 'deriv.com'
@@ -26,6 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       SITES_ARRAY: ${{ steps.map-site-ids.outputs.SITES_ARRAY }}
+      SITES_IDS: ${{ steps.map-site-ids.outputs.SITES_IDS }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -35,21 +40,36 @@ jobs:
         env:
           WEBFLOW_API_TOKEN: ${{ secrets.WEBFLOW_API_TOKEN }}
           SITE_ID: ${{ secrets.SITE_ID }}
+          STAGING_WEBFLOW_SITE_ID: ${{ secrets.STAGING_WEBFLOW_SITE_ID }}
+          WEBFLOW_SITE_ID: ${{ secrets.WEBFLOW_SITE_ID }}
+          DERIV_COM_SITE_ID: ${{ secrets.DERIV_COM_SITE_ID }}
+          DERIV_ME_SITE_ID: ${{ secrets.DERIV_ME_SITE_ID }}
+          DERIV_BE_SITE_ID: ${{ secrets.DERIV_BE_SITE_ID }}
         run: |
           SITES_TO_PUBLISH=()
+          SITES_DEPLOY_IDS=()
           if [ "${{ github.event.inputs.site_label_staging_webflow }}" == "true" ]; then
             SITES_TO_PUBLISH+=("\"staging-webflow.deriv.com\"")
+            SITES_DEPLOY_IDS+=("\"$STAGING_WEBFLOW_SITE_ID\"")
+          fi
+          if [ "${{ github.event.inputs.site_label_webflow }}" == "true" ]; then
+            SITES_TO_PUBLISH+=("\"webflow.deriv.com\"")
+            SITES_DEPLOY_IDS+=("\"$WEBFLOW_SITE_ID\"")
           fi
           if [ "${{ github.event.inputs.site_label_deriv_com }}" == "true" ]; then
             SITES_TO_PUBLISH+=("\"deriv.com\"")
+            SITES_DEPLOY_IDS+=("\"$DERIV_COM_SITE_ID\"")
           fi
           if [ "${{ github.event.inputs.site_label_deriv_me }}" == "true" ]; then
             SITES_TO_PUBLISH+=("\"deriv.me\"")
+            SITES_DEPLOY_IDS+=("\"$DERIV_ME_SITE_ID\"")
           fi
           if [ "${{ github.event.inputs.site_label_deriv_be }}" == "true" ]; then
             SITES_TO_PUBLISH+=("\"deriv.be\"")
+            SITES_DEPLOY_IDS+=("\"$DERIV_BE_SITE_ID\"")
           fi
             SITES_ARRAY="[$(IFS=,; echo "${SITES_TO_PUBLISH[*]}")]" >> $GITHUB_OUTPUT 
+            SITES_IDS="[$(IFS=,; echo "${SITES_DEPLOY_IDS[*]}")]" >> $GITHUB_OUTPUT 
             echo "Publishing to $site"
             RESPONSE=$(curl -s -o response_${site//./_}.txt -w "%{http_code}" -X POST "https://api.webflow.com/v2/sites/$SITE_ID/publish" \
               -H "Authorization: Bearer $WEBFLOW_API_TOKEN" \
@@ -57,7 +77,7 @@ jobs:
               -H "Content-Type: application/json" \
               -d "{
                     \"publishToWebflowSubdomain\": false,
-                    \"customDomains\": $SITES_ARRAY,
+                    \"customDomains\": $SITES_IDS,
                   }")
             if [ $RESPONSE -ne 202 ]; then
               echo "Webflow Publish to $site failed with status $RESPONSE"
