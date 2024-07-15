@@ -70,6 +70,7 @@ jobs:
           fi
             SITES_ARRAY="[$(IFS=,; echo "${SITES_TO_PUBLISH[*]}")]" >> $GITHUB_OUTPUT 
             SITES_IDS="[$(IFS=,; echo "${SITES_DEPLOY_IDS[*]}")]" >> $GITHUB_OUTPUT 
+            JSON_SITE_IDS=$(echo $SITES_IDS | jq -c .)
             echo "Publishing to $site"
             RESPONSE=$(curl -s -o response_${site//./_}.txt -w "%{http_code}" -X POST "https://api.webflow.com/v2/sites/$WEBFLOW_GENERAL_SITE_ID/publish" \
               -H "Authorization: Bearer $WEBFLOW_API_TOKEN" \
@@ -77,7 +78,7 @@ jobs:
               -H "Content-Type: application/json" \
               -d "{
                     \"publishToWebflowSubdomain\": false,
-                    \"customDomains\": $(echo $SITES_IDS | jq -c .),
+                    \"customDomains\": $JSON_SITE_IDS,
                   }")
             if [ $RESPONSE -ne 202 ]; then
               echo "Webflow Publish to $site failed with status $RESPONSE"
