@@ -43,6 +43,7 @@ jobs:
           DERIV_COM_SITE_ID: ${{ secrets.DERIV_COM_SITE_ID }}
           DERIV_ME_SITE_ID: ${{ secrets.DERIV_ME_SITE_ID }}
           DERIV_BE_SITE_ID: ${{ secrets.DERIV_BE_SITE_ID }}
+          WEBFLOW_GENERAL_SITE_ID: ${{ secrets.WEBFLOW_GENERAL_SITE_ID }}
         run: |
           SITES_TO_PUBLISH=()
           SITES_DEPLOY_IDS=()
@@ -69,7 +70,7 @@ jobs:
             SITES_ARRAY="[$(IFS=,; echo "${SITES_TO_PUBLISH[*]}")]" >> $GITHUB_OUTPUT 
             SITES_IDS="[$(IFS=,; echo "${SITES_DEPLOY_IDS[*]}")]" >> $GITHUB_OUTPUT 
             echo "Publishing to $site"
-            RESPONSE=$(curl -s -o response_${site//./_}.txt -w "%{http_code}" -X POST "https://api.webflow.com/v2/sites/$SITE_ID/publish" \
+            RESPONSE=$(curl -s -o response_${site//./_}.txt -w "%{http_code}" -X POST "https://api.webflow.com/v2/sites/$WEBFLOW_GENERAL_SITE_ID/publish" \
               -H "Authorization: Bearer $WEBFLOW_API_TOKEN" \
               -H "Accept: application/json" \
               -H "Content-Type: application/json" \
@@ -87,7 +88,7 @@ jobs:
   send_slack_success:
     name: Send Release Slack notification success
     runs-on: ubuntu-latest
-    if: success()
+    if: always()
     needs: [publish]
     steps:
       - name: Determine Slack Message
