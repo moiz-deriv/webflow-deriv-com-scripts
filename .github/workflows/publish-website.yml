@@ -6,23 +6,23 @@ on:
     inputs:
       site_label_staging_webflow:
         type: boolean
-        description: 'staging-webflow.deriv.com'
+        description: "staging-webflow.deriv.com"
         default: false
       site_label_webflow:
         type: boolean
-        description: 'webflow.deriv.com'
+        description: "webflow.deriv.com"
         default: false
       site_label_deriv_com:
         type: boolean
-        description: 'deriv.com'
+        description: "deriv.com"
         default: false
       site_label_deriv_me:
         type: boolean
-        description: 'deriv.me'
+        description: "deriv.me"
         default: false
       site_label_deriv_be:
         type: boolean
-        description: 'deriv.be'
+        description: "deriv.be"
         default: false
 
 jobs:
@@ -87,14 +87,21 @@ jobs:
               echo "Webflow Publish to $site succeeded"
             fi
   send_slack_success:
-        name: Send Release Slack notification success
-        runs-on: ubuntu-latest
-        if: success()
-        needs: [publish]
-        steps:
-          - name: Send Slack Notification
-            uses: "deriv-com/shared-actions/.github/actions/send_slack_notification@master"
-            with:
-              SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-              MESSAGE: "Release succeeded for ${{ needs.publish.outputs.SITES_ARRAY }}"
-    
+    name: Send Release Slack notification success
+    runs-on: ubuntu-latest
+    if: success()
+    needs: [publish]
+    steps:
+      - name: Determine Slack Message
+        id: slack_message
+        run: |
+          DATE=$(date '+%Y-%m-%d %H:%M:%S')
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "MESSAGE=Release succeeded for ${{ needs.publish.outputs.SITES_ARRAY }} at $DATE" >> $GITHUB_ENV
+          else
+            echo "MESSAGE=Release failed for ${{ needs.publish.outputs.SITES_ARRAY }} at $DATE" >> $GITHUB_ENV
+      - name: Send Slack Notification
+        uses: "deriv-com/shared-actions/.github/actions/send_slack_notification@master"
+        with:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          MESSAGE: ${{ env.MESSAGE }}
