@@ -76,7 +76,7 @@ jobs:
               -H "Authorization: Bearer $WEBFLOW_API_TOKEN" \
               -H "Accept: application/json" \
               -H "Content-Type: application/json" \
-              -d "{
+              --data-binary "{
                     \"publishToWebflowSubdomain\": false,
                     \"customDomains\": $JSON_SITE_IDS
                   }")
