@@ -97,6 +97,7 @@ jobs:
         id: slack_message
         run: |
           DATE=$(date '+%Y-%m-%d %H:%M:%S')
+          echo "Determined SITES_ARRAY: $SITES_ARRAY"
           if [ "${{ needs.publish.result }}" == "success" ]; then
             echo "MESSAGE=Release succeeded for ${{ needs.publish.outputs.SITES_ARRAY }} at $DATE" >> $GITHUB_ENV
           else
