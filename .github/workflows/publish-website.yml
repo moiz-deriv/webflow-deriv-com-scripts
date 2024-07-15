@@ -77,7 +77,7 @@ jobs:
               -d "{
                     \"publishToWebflowSubdomain\": false,
                     \"customDomains\": [
-                      $(IFS=,; echo "${SITES_DEPLOY_IDS[*]}")]
+                      $DERIV_BE_SITE_ID,
                       ],
                   }")
             if [ $RESPONSE -ne 202 ]; then
