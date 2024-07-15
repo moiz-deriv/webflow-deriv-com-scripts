@@ -68,7 +68,7 @@ jobs:
             SITES_TO_PUBLISH+=("\"deriv.be\"")
             SITES_DEPLOY_IDS+=("\"$DERIV_BE_SITE_ID\"")
           fi
-            SITES_ARRAY="[$(IFS=,; echo "${SITES_TO_PUBLISH[*]}")]" >> $GITHUB_OUTPUT 
+            echo "SITES_ARRAY="[$(IFS=,; echo "${SITES_TO_PUBLISH[*]}")]"" >> $GITHUB_OUTPUT 
             SITES_IDS="[$(IFS=,; echo "${SITES_DEPLOY_IDS[*]}")]" >> $GITHUB_OUTPUT 
             JSON_SITE_IDS=$(echo $SITES_IDS | jq -c .)
             echo "Publishing to $site"
