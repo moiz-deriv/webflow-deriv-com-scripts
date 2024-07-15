@@ -95,13 +95,15 @@ jobs:
     steps:
       - name: Determine Slack Message
         id: slack_message
+        env:
+          SITES_ARRAY: ${{ needs.publish.outputs.SITES_ARRAY }}
         run: |
           DATE=$(date '+%Y-%m-%d %H:%M:%S')
           echo "Determined SITES_ARRAY: $SITES_ARRAY"
           if [ "${{ needs.publish.result }}" == "success" ]; then
-            echo "MESSAGE=Release succeeded for ${{ needs.publish.outputs.SITES_ARRAY }} at $DATE" >> $GITHUB_ENV
+            echo "MESSAGE=Release succeeded for $SITES_ARRAY at $DATE" >> $GITHUB_ENV
           else
-            echo "MESSAGE=Release failed for ${{ needs.publish.outputs.SITES_ARRAY }} at $DATE" >> $GITHUB_ENV
+            echo "MESSAGE=Release failed for $SITES_ARRAY at $DATE" >> $GITHUB_ENV
           fi
       - name: Send Slack Notification
         uses: "deriv-com/shared-actions/.github/actions/send_slack_notification@master"
