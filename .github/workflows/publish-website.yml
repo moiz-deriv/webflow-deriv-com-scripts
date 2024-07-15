@@ -30,7 +30,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       SITES_ARRAY: ${{ steps.map-site-ids.outputs.SITES_ARRAY }}
-      SITES_IDS: ${{ steps.map-site-ids.outputs.SITES_IDS }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -39,7 +38,6 @@ jobs:
         id: map-site-ids
         env:
           WEBFLOW_API_TOKEN: ${{ secrets.WEBFLOW_API_TOKEN }}
-          SITE_ID: ${{ secrets.SITE_ID }}
           STAGING_WEBFLOW_SITE_ID: ${{ secrets.STAGING_WEBFLOW_SITE_ID }}
           WEBFLOW_SITE_ID: ${{ secrets.WEBFLOW_SITE_ID }}
           DERIV_COM_SITE_ID: ${{ secrets.DERIV_COM_SITE_ID }}
