@@ -97,7 +97,7 @@ jobs:
         id: slack_message
         run: |
           DATE=$(date '+%Y-%m-%d %H:%M:%S')
-          if [ "${{ job.status }}" == "success" ]; then
+          if [ "${{ needs.publish.result }}" == "success" ]; then
             echo "MESSAGE=Release succeeded for ${{ needs.publish.outputs.SITES_ARRAY }} at $DATE" >> $GITHUB_ENV
           else
             echo "MESSAGE=Release failed for ${{ needs.publish.outputs.SITES_ARRAY }} at $DATE" >> $GITHUB_ENV
