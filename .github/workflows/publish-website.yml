@@ -101,6 +101,7 @@ jobs:
             echo "MESSAGE=Release succeeded for ${{ needs.publish.outputs.SITES_ARRAY }} at $DATE" >> $GITHUB_ENV
           else
             echo "MESSAGE=Release failed for ${{ needs.publish.outputs.SITES_ARRAY }} at $DATE" >> $GITHUB_ENV
+          fi
       - name: Send Slack Notification
         uses: "deriv-com/shared-actions/.github/actions/send_slack_notification@master"
         with:
