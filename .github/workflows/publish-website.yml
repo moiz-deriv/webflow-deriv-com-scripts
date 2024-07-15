@@ -78,7 +78,7 @@ jobs:
               -H "Content-Type: application/json" \
               -d "{
                     \"publishToWebflowSubdomain\": false,
-                    \"customDomains\": $JSON_SITE_IDS,
+                    \"customDomains\": $JSON_SITE_IDS
                   }")
             if [ $RESPONSE -ne 202 ]; then
               echo "Webflow Publish to $site failed with status $RESPONSE"
