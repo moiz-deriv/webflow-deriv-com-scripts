@@ -1,4 +1,4 @@
-import { db, ref, onValue } from "./firebaseConfig.js";
+import { db, ref, onValue } from "../firebaseConfig";
 
 let is_live_chat_visible = false;
 let is_whatapp_visible = false;
