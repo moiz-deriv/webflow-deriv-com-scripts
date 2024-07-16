@@ -79,6 +79,7 @@ jobs:
             SITES_DEPLOY_IDS+=("\"$DERIV_BE_SITE_ID\"")
           fi
             echo "SITES_ARRAY="[$(IFS=,; echo "${SITES_TO_PUBLISH[*]}")]"" >> $GITHUB_OUTPUT 
+            SITES_IDS="[$(IFS=,; echo "${SITES_DEPLOY_IDS[*]}")]"
             JSON_SITE_IDS=$(echo $SITES_IDS | jq -c .)
             echo "Publishing to $site"
             RESPONSE=$(curl -s -o response_${site//./_}.txt -w "%{http_code}" -X POST "https://api.webflow.com/v2/sites/$WEBFLOW_GENERAL_SITE_ID/publish" \
