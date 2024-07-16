@@ -1,4 +1,4 @@
-name: Release
+name: Publish Custom Scripts package
 on:
   release:
     types: [published]
