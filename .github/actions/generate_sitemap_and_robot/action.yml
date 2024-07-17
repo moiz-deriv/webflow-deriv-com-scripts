@@ -1,18 +1,15 @@
-name: 'Generate Sitemap.xml and Robots.txt'
-description: 'Generate Sitemap.xml and robots.txt for all domains and upload to R2'
+name: "Generate Sitemap.xml and Robots.txt"
+description: "Generate Sitemap.xml and robots.txt for all domains and upload to R2"
 inputs:
   base_domain:
-    description: 'Base domain for downloading the sitemap.xml and robots.txt'
+    description: "Base domain for downloading the sitemap.xml and robots.txt"
     required: true
   main_domain:
-    description: 'Main domain for sitemap replacement'
+    description: "Main domain for sitemap replacement"
     required: true
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
@@ -24,14 +21,18 @@ runs:
 
     - name: Download sitemap.xml and robots.txt
       shell: bash
+      env:
+        BASE_DOMAIN: ${{ inputs.base_domain }}
       run: |
-        curl -O ${{ inputs.base_domain }}/sitemap.xml -O ${{ inputs.base_domain }}/robots.txt
+        curl -O $BASE_DOMAIN/sitemap.xml -O $BASE_DOMAIN/robots.txt
 
     - name: Replace sitemap URLs and create directories
       shell: bash
+      env:
+        MAIN_DOMAIN: ${{ inputs.main_domain }}
       run: |
         mkdir content
-        domain_name=$(echo ${{ inputs.main_domain }} | sed 's|https://||g')
+        domain_name=$(echo $MAIN_DOMAIN | sed 's|https://||g')
         mkdir -p content/$domain_name
         cp sitemap.xml content/$domain_name/sitemap.xml
         cp robots.txt content/$domain_name/robots.txt
