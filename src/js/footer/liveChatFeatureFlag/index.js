@@ -30,7 +30,30 @@ function fetchChatData() {
             ? "visible"
             : "hidden";
         }
+        const isHelpCentre = window.location.pathname.includes("/help-centre");
 
+        if (isHelpCentre) {
+          const liveChatBtns = document.querySelectorAll(".livechatbtn");
+          if (is_live_chat_visible) {
+            liveChatBtns.forEach((btn) => {
+              btn.style.visibility = "visible";
+            });
+          } else {
+            liveChatBtns.forEach((btn) => {
+              btn.style.visibility = "hidden";
+            });
+          }
+          const whatappChatBtns = document.querySelectorAll(".whatsapp_chat");
+          if (is_whatapp_visible) {
+            whatappChatBtns.forEach((btn) => {
+              btn.style.visibility = "visible";
+            });
+          } else {
+            whatappChatBtns.forEach((btn) => {
+              btn.style.visibility = "hidden";
+            });
+          }
+        }
         //on scroll show live chat
         window.addEventListener("scroll", function () {
           if (is_live_chat_visible || is_whatapp_visible) {
