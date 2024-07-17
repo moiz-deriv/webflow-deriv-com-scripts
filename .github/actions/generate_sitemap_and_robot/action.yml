@@ -1,0 +1,41 @@
+name: "Generate Sitemap.xml and Robots.txt"
+description: "Generate Sitemap.xml and robots.txt for all domains and upload to R2"
+inputs:
+  base_domain:
+    description: "Base domain for downloading the sitemap.xml and robots.txt"
+    required: true
+  main_domain:
+    description: "Main domain for sitemap replacement"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: "20"
+
+    - name: Install yargs
+      shell: bash
+      run: npm install yargs
+
+    - name: Download sitemap.xml and robots.txt
+      shell: bash
+      env:
+        BASE_DOMAIN: ${{ inputs.base_domain }}
+      run: |
+        curl -O $BASE_DOMAIN/sitemap.xml -O $BASE_DOMAIN/robots.txt
+
+    - name: Replace sitemap URLs and create directories
+      shell: bash
+      env:
+        MAIN_DOMAIN: ${{ inputs.main_domain }}
+      run: |
+        mkdir content
+        domain_name=$(echo $MAIN_DOMAIN | sed 's|https://||g')
+        mkdir -p content/$domain_name
+        cp sitemap.xml content/$domain_name/sitemap.xml
+        cp robots.txt content/$domain_name/robots.txt
+        node .github/workflows/modify_sitemap.js --new-domain $domain_name --input-file content/$domain_name/sitemap.xml
+        node .github/workflows/modify_robots.js --sitemap-url $domain_name --input-file content/$domain_name/robots.txt
+        rm sitemap.xml robots.txt

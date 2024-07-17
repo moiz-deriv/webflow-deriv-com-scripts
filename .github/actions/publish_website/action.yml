@@ -1,0 +1,91 @@
+name: 'Publish Website to Webflow'
+description: 'Map site labels to site IDs and deploy to Webflow'
+inputs:
+  site_label_staging_webflow:
+    description: 'Publish to staging-webflow.deriv.com'
+    required: true
+    default: 'false'
+  site_label_webflow:
+    description: 'Publish to webflow.deriv.com'
+    required: true
+    default: 'false'
+  site_label_deriv_com:
+    description: 'Publish to deriv.com'
+    required: true
+    default: 'false'
+  site_label_deriv_me:
+    description: 'Publish to deriv.me'
+    required: true
+    default: 'false'
+  site_label_deriv_be:
+    description: 'Publish to deriv.be'
+    required: true
+    default: 'false'
+  webflow_api_token:
+    description: 'Webflow API Token'
+    required: true
+  staging_webflow_site_id:
+    description: 'Staging Webflow Site ID'
+    required: true
+  webflow_site_id:
+    description: 'Webflow Site ID'
+    required: true
+  deriv_com_site_id:
+    description: 'Deriv.com Site ID'
+    required: true
+  deriv_me_site_id:
+    description: 'Deriv.me Site ID'
+    required: true
+  deriv_be_site_id:
+    description: 'Deriv.be Site ID'
+    required: true
+  webflow_general_site_id:
+    description: 'General Webflow Site ID'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Map site labels to site IDs and deploy
+      shell: bash
+      run: |
+        SITES_TO_PUBLISH=()
+        SITES_DEPLOY_IDS=()
+        if [ "${{ inputs.site_label_staging_webflow }}" == "true" ]; then
+          SITES_TO_PUBLISH+=("\"staging-webflow.deriv.com\"")
+          SITES_DEPLOY_IDS+=("\"${{ inputs.staging_webflow_site_id }}\"")
+        fi
+        if [ "${{ inputs.site_label_webflow }}" == "true" ]; then
+          SITES_TO_PUBLISH+=("\"webflow.deriv.com\"")
+          SITES_DEPLOY_IDS+=("\"${{ inputs.webflow_site_id }}\"")
+        fi
+        if [ "${{ inputs.site_label_deriv_com }}" == "true" ]; then
+          SITES_TO_PUBLISH+=("\"deriv.com\"")
+          SITES_DEPLOY_IDS+=("\"${{ inputs.deriv_com_site_id }}\"")
+        fi
+        if [ "${{ inputs.site_label_deriv_me }}" == "true" ]; then
+          SITES_TO_PUBLISH+=("\"deriv.me\"")
+          SITES_DEPLOY_IDS+=("\"${{ inputs.deriv_me_site_id }}\"")
+        fi
+        if [ "${{ inputs.site_label_deriv_be }}" == "true" ]; then
+          SITES_TO_PUBLISH+=("\"deriv.be\"")
+          SITES_DEPLOY_IDS+=("\"${{ inputs.deriv_be_site_id }}\"")
+        fi
+        echo "SITES_ARRAY="[$(IFS=,; echo "${SITES_TO_PUBLISH[*]}")]"" >> $GITHUB_OUTPUT 
+        SITES_IDS="[$(IFS=,; echo "${SITES_DEPLOY_IDS[*]}")]"
+        JSON_SITE_IDS=$(echo $SITES_IDS | jq -c .)
+        echo "Publishing to $site"
+        RESPONSE=$(curl -s -o response_${site//./_}.txt -w "%{http_code}" -X POST "https://api.webflow.com/v2/sites/${{ inputs.webflow_general_site_id }}/publish" \
+          -H "Authorization: Bearer ${{ inputs.webflow_api_token }}" \
+          -H "Accept: application/json" \
+          -H "Content-Type: application/json" \
+          --data-binary "{
+                \"publishToWebflowSubdomain\": false,
+                \"customDomains\": $JSON_SITE_IDS
+              }")
+        if [ $RESPONSE -ne 202 ]; then
+          echo "Webflow Publish to $site failed with status $RESPONSE"
+          cat response_${site//./_}.txt
+          exit 1
+        else
+          echo "Webflow Publish to $site succeeded"
+        fi

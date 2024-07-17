@@ -1,5 +1,4 @@
-name: Publish Site
-run-name: Runs the site publish action for multiple domains
+name: Publish website and Upload sitemap and robots
 
 on:
   workflow_dispatch:
@@ -26,96 +25,87 @@ on:
         default: false
 
 jobs:
-  publish:
+  publish_site:
     runs-on: ubuntu-latest
     outputs:
-      SITES_ARRAY: ${{ steps.map-site-ids.outputs.SITES_ARRAY }}
-      COM_DOMAIN_PUBLISHED: ${{ steps.set_outputs.outputs.site_label_deriv_com }}
-      ME_DOMAIN_PUBLISHED: ${{ steps.set_outputs.outputs.site_label_deriv_me }}
-      BE_DOMAIN_PUBLISHED: ${{ steps.set_outputs.outputs.site_label_deriv_be }}
+      SITES_ARRAY: ${{ steps.publish.outputs.SITES_ARRAY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Install jq
         run: sudo apt-get install -y jq
-      - name: Set Outputs
-        id: set_outputs
-        run: |
-          echo "site_label_deriv_com=${{ github.event.inputs.site_label_deriv_com }}" >> $GITHUB_OUTPUT
-          echo "site_label_deriv_me=${{ github.event.inputs.site_label_deriv_me }}" >> $GITHUB_OUTPUT
-          echo "site_label_deriv_be=${{ github.event.inputs.site_label_deriv_be }}" >> $GITHUB_OUTPUT
 
-      - name: Map site labels to site IDs and deploy
-        id: map-site-ids
-        env:
-          WEBFLOW_API_TOKEN: ${{ secrets.WEBFLOW_API_TOKEN }}
-          STAGING_WEBFLOW_SITE_ID: ${{ secrets.STAGING_WEBFLOW_SITE_ID }}
-          WEBFLOW_SITE_ID: ${{ secrets.WEBFLOW_SITE_ID }}
-          DERIV_COM_SITE_ID: ${{ secrets.DERIV_COM_SITE_ID }}
-          DERIV_ME_SITE_ID: ${{ secrets.DERIV_ME_SITE_ID }}
-          DERIV_BE_SITE_ID: ${{ secrets.DERIV_BE_SITE_ID }}
-          WEBFLOW_GENERAL_SITE_ID: ${{ secrets.WEBFLOW_GENERAL_SITE_ID }}
-        run: |
-          SITES_TO_PUBLISH=()
-          SITES_DEPLOY_IDS=()
-          if [ "${{ github.event.inputs.site_label_staging_webflow }}" == "true" ]; then
-            SITES_TO_PUBLISH+=("\"staging-webflow.deriv.com\"")
-            SITES_DEPLOY_IDS+=("\"$STAGING_WEBFLOW_SITE_ID\"")
-          fi
-          if [ "${{ github.event.inputs.site_label_webflow }}" == "true" ]; then
-            SITES_TO_PUBLISH+=("\"webflow.deriv.com\"")
-            SITES_DEPLOY_IDS+=("\"$WEBFLOW_SITE_ID\"")
-          fi
-          if [ "${{ github.event.inputs.site_label_deriv_com }}" == "true" ]; then
-            SITES_TO_PUBLISH+=("\"deriv.com\"")
-            SITES_DEPLOY_IDS+=("\"$DERIV_COM_SITE_ID\"")
-          fi
-          if [ "${{ github.event.inputs.site_label_deriv_me }}" == "true" ]; then
-            SITES_TO_PUBLISH+=("\"deriv.me\"")
-            SITES_DEPLOY_IDS+=("\"$DERIV_ME_SITE_ID\"")
-          fi
-          if [ "${{ github.event.inputs.site_label_deriv_be }}" == "true" ]; then
-            SITES_TO_PUBLISH+=("\"deriv.be\"")
-            SITES_DEPLOY_IDS+=("\"$DERIV_BE_SITE_ID\"")
-          fi
-            echo "SITES_ARRAY="[$(IFS=,; echo "${SITES_TO_PUBLISH[*]}")]"" >> $GITHUB_OUTPUT 
-            SITES_IDS="[$(IFS=,; echo "${SITES_DEPLOY_IDS[*]}")]"
-            JSON_SITE_IDS=$(echo $SITES_IDS | jq -c .)
-            echo "Publishing to $site"
-            RESPONSE=$(curl -s -o response_${site//./_}.txt -w "%{http_code}" -X POST "https://api.webflow.com/v2/sites/$WEBFLOW_GENERAL_SITE_ID/publish" \
-              -H "Authorization: Bearer $WEBFLOW_API_TOKEN" \
-              -H "Accept: application/json" \
-              -H "Content-Type: application/json" \
-              --data-binary "{
-                    \"publishToWebflowSubdomain\": false,
-                    \"customDomains\": $JSON_SITE_IDS
-                  }")
-            if [ $RESPONSE -ne 202 ]; then
-              echo "Webflow Publish to $site failed with status $RESPONSE"
-              cat response_${site//./_}.txt
-              exit 1
-            else
-              echo "Webflow Publish to $site succeeded"
-            fi
+      - name: Publish Website
+        id: publish
+        uses: ./actions/publish_website
+        with:
+          site_label_staging_webflow: ${{ github.event.inputs.site_label_staging_webflow }}
+          site_label_webflow: ${{ github.event.inputs.site_label_webflow }}
+          site_label_deriv_com: ${{ github.event.inputs.site_label_deriv_com }}
+          site_label_deriv_me: ${{ github.event.inputs.site_label_deriv_me }}
+          site_label_deriv_be: ${{ github.event.inputs.site_label_deriv_be }}
+          webflow_api_token: ${{ secrets.WEBFLOW_API_TOKEN }}
+          staging_webflow_site_id: ${{ secrets.STAGING_WEBFLOW_SITE_ID }}
+          webflow_site_id: ${{ secrets.WEBFLOW_SITE_ID }}
+          deriv_com_site_id: ${{ secrets.DERIV_COM_SITE_ID }}
+          deriv_me_site_id: ${{ secrets.DERIV_ME_SITE_ID }}
+          deriv_be_site_id: ${{ secrets.DERIV_BE_SITE_ID }}
+          webflow_general_site_id: ${{ secrets.WEBFLOW_GENERAL_SITE_ID }}
   send_slack_success:
-    name: Send Release Slack notification success
     runs-on: ubuntu-latest
-    if: always()
-    needs: [publish]
+    needs: [publish_site]
     steps:
-      - name: Determine Slack Message
-        id: slack_message
-        env:
-          SITES_ARRAY: ${{ needs.publish.outputs.SITES_ARRAY }}
+      - name: Determine Slack Message for Publish Site
+        id: slack_message_publish
         run: |
           DATE=$(date '+%Y-%m-%d %H:%M:%S')
+          SITES_ARRAY=${{ needs.publish_site.outputs.SITES_ARRAY }}
           echo "Determined SITES_ARRAY: $SITES_ARRAY"
-          if [ "${{ needs.publish.result }}" == "success" ]; then
+          if [ "${{ needs.publish_site.result }}" == "success" ]; then
             echo "MESSAGE=Release succeeded for $SITES_ARRAY at $DATE" >> $GITHUB_ENV
           else
             echo "MESSAGE=Release failed for $SITES_ARRAY at $DATE" >> $GITHUB_ENV
-          fi
-      - name: Send Slack Notification
+      - name: Send Slack Notification for Publish Site
+        uses: "deriv-com/shared-actions/.github/actions/send_slack_notification@master"
+        with:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          MESSAGE: ${{ env.MESSAGE }}
+
+  generate_sitemap_and_robots:
+    runs-on: ubuntu-latest
+    needs: publish_site
+    if: ${{ needs.publish_site.result == 'success' && (github.event.inputs.site_label_staging_webflow == 'true' || github.event.inputs.site_label_webflow == 'true' || github.event.inputs.site_label_deriv_com == 'true' || github.event.inputs.site_label_deriv_me == 'true' || github.event.inputs.site_label_deriv_be == 'true') }} 
+    steps:
+      - name: Generate Sitemap and Robots.txt
+        uses: ./actions/generate_sitemap_and_robots
+        with:
+          base_domain: "https://staging-webflow.deriv.com"
+          main_domain: "https://deriv.com"
+
+  upload_to_r2:
+    runs-on: ubuntu-latest
+    needs: generate_sitemap_and_robots
+    steps:
+      - name: Upload to R2
+        uses: ./actions/upload_to_r2
+        with:
+          r2_account_id: ${{ secrets.R2_ACCOUNT_ID }}
+          r2_access_key_id: ${{ secrets.R2_ACCESS_KEY_ID }}
+          r2_secret_access_key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          r2_bucket_name: ${{ secrets.R2_BUCKET_NAME }}
+
+  send_slack_failure:
+    runs-on: ubuntu-latest
+    needs: [upload_to_r2]
+    if: failure()
+    steps:
+      - name: Determine Slack Message for Sitemap Failure
+        id: slack_message_sitemap
+        run: |
+          DATE=$(date '+%Y-%m-%d %H:%M:%S')
+          echo "MESSAGE=Sitemap and robots.txt generation failed for latest webflow release at $DATE" >> $GITHUB_ENV
+      - name: Send Slack Notification for Sitemap Failure
         uses: "deriv-com/shared-actions/.github/actions/send_slack_notification@master"
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
