@@ -5,8 +5,14 @@ import {
   onValue,
 } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
+const isStaging = window.location.hostname.includes("staging");
+
+const databaseURL = isStaging
+  ? "https://app-config-staging.firebaseio.com"
+  : "https://app-config-prod.firebaseio.com";
+
 const firebaseConfig = {
-  databaseURL: "https://app-config-prod.firebaseio.com",
+  databaseURL: databaseURL,
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
