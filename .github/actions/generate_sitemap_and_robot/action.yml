@@ -36,6 +36,6 @@ runs:
         mkdir -p content/$domain_name
         cp sitemap.xml content/$domain_name/sitemap.xml
         cp robots.txt content/$domain_name/robots.txt
-        node .github/workflows/modify_sitemap.js --new-domain $domain_name --input-file content/$domain_name/sitemap.xml
-        node .github/workflows/modify_robots.js --sitemap-url $domain_name --input-file content/$domain_name/robots.txt
+        node .github/modify_sitemap.js --new-domain $domain_name --input-file content/$domain_name/sitemap.xml
+        node .github/modify_robots.js --sitemap-url $domain_name --input-file content/$domain_name/robots.txt
         rm sitemap.xml robots.txt
