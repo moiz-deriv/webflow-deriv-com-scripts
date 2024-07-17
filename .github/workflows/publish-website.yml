@@ -66,6 +66,7 @@ jobs:
             echo "MESSAGE=Release succeeded for $SITES_ARRAY at $DATE" >> $GITHUB_ENV
           else
             echo "MESSAGE=Release failed for $SITES_ARRAY at $DATE" >> $GITHUB_ENV
+          fi
       - name: Send Slack Notification for Publish Site
         uses: "deriv-com/shared-actions/.github/actions/send_slack_notification@master"
         with:
@@ -79,7 +80,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
