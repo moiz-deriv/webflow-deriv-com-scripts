@@ -31,7 +31,7 @@ function fetchChatData() {
       if (is_live_chat_visible || is_whatapp_visible) {
         liveChatWrapper?.classList?.remove("hide-element");
       }
-      if (is_live_chat_visible && is_whatapp_visible) {
+      if (!is_live_chat_visible && !is_whatapp_visible) {
         liveChatWrapper?.classList?.add("hide-element");
       }
     });
