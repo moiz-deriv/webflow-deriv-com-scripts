@@ -4,7 +4,7 @@ let is_live_chat_visible = false;
 let is_whatapp_visible = false;
 
 function fetchChatData() {
-  const dataRef = ref(db, "remote_config/deriv-com/chat.json");
+  const dataRef = ref(db, "remote_config/deriv-com/chat");
   onValue(dataRef, (snapshot) => {
     const data = snapshot.val();
     is_live_chat_visible = data.live_chat;
