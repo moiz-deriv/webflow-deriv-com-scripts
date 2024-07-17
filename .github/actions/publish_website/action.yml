@@ -42,10 +42,15 @@ inputs:
   webflow_general_site_id:
     description: 'General Webflow Site ID'
     required: true
+outputs:
+  SITES_ARRAY:
+    value: ${{ steps.map-site-ids.outputs.SITES_ARRAY }}
+    description: 'Array of sites published'
 runs:
   using: 'composite'
   steps:
     - name: Map site labels to site IDs and deploy
+      id: map-site-ids
       shell: bash
       run: |
         SITES_TO_PUBLISH=()
