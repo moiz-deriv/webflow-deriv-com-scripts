@@ -93,14 +93,13 @@ jobs:
       - name: Download sitemap.xml and robots.txt
         shell: bash
         env:
-          BASE_DOMAIN: ${{ inputs.base_domain }}
+          BASE_DOMAIN: "https://staging-webflow.deriv.com"
         run: |
           curl -O $BASE_DOMAIN/sitemap.xml -O $BASE_DOMAIN/robots.txt
 
       - name: Generate Sitemap and Robots.txt
         uses: ./.github/actions/generate_sitemap_and_robots
         with:
-          base_domain: "https://staging-webflow.deriv.com"
           main_domain: "https://deriv.com"
 
   upload_to_r2:

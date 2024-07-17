@@ -1,9 +1,6 @@
 name: "Generate Sitemap.xml and Robots.txt"
 description: "Generate Sitemap.xml and robots.txt for all domains and upload to R2"
 inputs:
-  base_domain:
-    description: "Base domain for downloading the sitemap.xml and robots.txt"
-    required: true
   main_domain:
     description: "Main domain for sitemap replacement"
     required: true
