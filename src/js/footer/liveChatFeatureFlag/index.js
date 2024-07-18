@@ -6,7 +6,7 @@ let is_whatapp_visible = false;
 function fetchChatData() {
   try {
     const liveChatWrapper = document.getElementById("live_chat-wrapper");
-    const dataRef = ref(db, "remote_config/deriv-com/chat");
+    const dataRef = ref(db, "remote_config/deriv-com/chat.json");
     onValue(
       dataRef,
       (snapshot) => {
