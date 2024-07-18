@@ -52,14 +52,6 @@ function fetchChatData() {
             whatappChatBtns.forEach((btn) => {
               btn.style.visibility = "hidden";
             });
-            const sectionCta = document.querySelector("section_cta");
-            if (!is_live_chat_visible && !is_whatapp_visible) {
-              if (sectionCta) {
-                sectionCta.style.visibility = "hidden";
-              }
-            } else {
-              sectionCta.style.visibility = "visible";
-            }
           }
         }
         //on scroll show live chat
