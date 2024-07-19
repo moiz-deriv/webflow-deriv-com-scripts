@@ -57,7 +57,7 @@ runs:
         SITES_DEPLOY_IDS=()
         if [ "${{ inputs.site_label_staging_webflow }}" == "true" ]; then
           SITES_TO_PUBLISH+=("\"staging.deriv.com\"")
-          SITES_DEPLOY_IDS+=("\"${{ inputs.staging_webflow_site_id }}\"")
+          SITES_DEPLOY_IDS+=("\"${{ inputs.staging_site_id }}\"")
         fi
         if [ "${{ inputs.site_label_webflow }}" == "true" ]; then
           SITES_TO_PUBLISH+=("\"webflow.deriv.com\"")
