@@ -22,7 +22,7 @@ jobs:
       - name: Download sitemap.xml and robots.txt
         shell: bash
         env:
-          BASE_DOMAIN: "https://staging-webflow.deriv.com"
+          BASE_DOMAIN: "https://staging.deriv.com"
         run: |
           curl -O $BASE_DOMAIN/sitemap.xml -O $BASE_DOMAIN/robots.txt
 

@@ -5,7 +5,7 @@ on:
     inputs:
       site_label_staging_webflow:
         type: boolean
-        description: "staging-webflow.deriv.com"
+        description: "staging.deriv.com"
         default: false
       site_label_webflow:
         type: boolean
@@ -93,7 +93,7 @@ jobs:
       - name: Download sitemap.xml and robots.txt
         shell: bash
         env:
-          BASE_DOMAIN: "https://staging-webflow.deriv.com"
+          BASE_DOMAIN: "https://staging.deriv.com"
         run: |
           curl -O $BASE_DOMAIN/sitemap.xml -O $BASE_DOMAIN/robots.txt
 
