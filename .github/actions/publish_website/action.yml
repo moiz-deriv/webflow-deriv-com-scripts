@@ -1,7 +1,7 @@
 name: 'Publish Website to Webflow'
 description: 'Map site labels to site IDs and deploy to Webflow'
 inputs:
-  site_label_staging_webflow:
+  site_label_staging:
     description: 'Publish to staging.deriv.com'
     required: true
     default: 'false'
@@ -24,8 +24,8 @@ inputs:
   webflow_api_token:
     description: 'Webflow API Token'
     required: true
-  staging_webflow_site_id:
-    description: 'Staging Webflow Site ID'
+  staging_site_id:
+    description: 'Staging Site ID'
     required: true
   webflow_site_id:
     description: 'Webflow Site ID'
@@ -55,7 +55,7 @@ runs:
       run: |
         SITES_TO_PUBLISH=()
         SITES_DEPLOY_IDS=()
-        if [ "${{ inputs.site_label_staging_webflow }}" == "true" ]; then
+        if [ "${{ inputs.site_label_staging }}" == "true" ]; then
           SITES_TO_PUBLISH+=("\"staging.deriv.com\"")
           SITES_DEPLOY_IDS+=("\"${{ inputs.staging_site_id }}\"")
         fi
