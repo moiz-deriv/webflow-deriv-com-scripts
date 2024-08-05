@@ -17,6 +17,11 @@ function fetchChatData() {
         const whatapp_icon = document.querySelector(".whatsapp_chat");
         const livechat_icon = document.querySelector(".livechatbtn");
 
+        var chatWidget = document.getElementById("chat-widget-minimized");
+        if (chatWidget) {
+          chatWidget.style.opacity = "0";
+        }
+
         // Toggle visibility for WhatsApp icon if available
         if (whatapp_icon) {
           whatapp_icon.style.visibility = is_whatapp_visible
@@ -56,6 +61,10 @@ function fetchChatData() {
         }
         //on scroll show live chat
         window.addEventListener("scroll", function () {
+          var chatWidget = document.getElementById("chat-widget-minimized");
+          if (chatWidget) {
+            chatWidget.style.opacity = "0";
+          }
           if (is_live_chat_visible || is_whatapp_visible) {
             liveChatWrapper?.classList?.remove("hide-element");
           }
