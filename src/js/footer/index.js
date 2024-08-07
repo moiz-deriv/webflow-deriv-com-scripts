@@ -10,3 +10,4 @@ import "./changeBannerPadding";
 import "./closeMobileMenu";
 import "./liveChatFeatureFlag";
 import "./hideLiveChatExtraIcon";
+import "./derivGoDownload";
