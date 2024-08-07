@@ -284,6 +284,9 @@ function generateText(platforms) {
   if (apple === "Yes" && android !== "Yes" && huawei !== "Yes") {
     return "iOS";
   }
+  if (apple !== "Yes" && android !== "Yes" && huawei === "Yes") {
+    return "Huawei";
+  }
 
   return "";
 }
