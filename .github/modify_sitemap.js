@@ -22,7 +22,6 @@ const argv = yargs
 // Get the new domain and input file from command-line arguments
 const newDomain = argv["new-domain"];
 const inputFile = argv["input-file"];
-// Define the new domain
 // Read the input file
 fs.readFile(inputFile, "utf8", (err, data) => {
   if (err) {
@@ -36,10 +35,15 @@ fs.readFile(inputFile, "utf8", (err, data) => {
 
   // Define the pattern to filter out unwanted URLs
   const unwantedPattern = /deriv\.com(\/eu\b|\/[a-z-]{2,5}\/eu\b)/g;
-  const filteredContent = newContent.replace(unwantedPattern, "");
+
+  // Check if there are unwanted URLs in the original content
+  if (unwantedPattern.test(data)) {
+    console.log("The file contains unwanted URLs. No changes were made.");
+    return;
+  }
 
   // Write the modified content to the input file
-  fs.writeFile(inputFile, filteredContent, "utf8", (err) => {
+  fs.writeFile(inputFile, newContent, "utf8", (err) => {
     if (err) {
       console.error("Error writing the file:", err);
       return;
