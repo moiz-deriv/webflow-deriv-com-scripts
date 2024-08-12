@@ -32,12 +32,14 @@ fs.readFile(inputFile, "utf8", (err, data) => {
 
   // Define the pattern to match the URLs
   const pattern = /https:\/\/([^.]*\.)?deriv\.(com|be|me)/g;
-
-  // Replace the matched URLs with the new domain
   const newContent = data.replace(pattern, `https://${newDomain}`);
 
-  // Write the modified content to the output file
-  fs.writeFile(inputFile, newContent, "utf8", (err) => {
+  // Define the pattern to filter out unwanted URLs
+  const unwantedPattern = /deriv\.com(\/eu\b|\/[a-z-]{2,5}\/eu\b)/g;
+  const filteredContent = newContent.replace(unwantedPattern, "");
+
+  // Write the modified content to the input file
+  fs.writeFile(inputFile, filteredContent, "utf8", (err) => {
     if (err) {
       console.error("Error writing the file:", err);
       return;
