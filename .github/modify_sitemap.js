@@ -37,17 +37,14 @@ fs.readFile(inputFile, "utf8", (err, data) => {
   const unwantedPattern = /deriv\.com(\/eu\b|\/[a-z-]{2,5}\/eu\b)/g;
 
   // Check if there are unwanted URLs in the original content
-  if (unwantedPattern.test(data)) {
-    console.log("The file contains unwanted URLs. No changes were made.");
-    return;
+  if (!unwantedPattern.test(data)) {
+    // Write the modified content to the input file
+    fs.writeFile(inputFile, newContent, "utf8", (err) => {
+      if (err) {
+        console.error("Error writing the file:", err);
+        return;
+      }
+      console.log("URLs have been replaced successfully.");
+    });
   }
-
-  // Write the modified content to the input file
-  fs.writeFile(inputFile, newContent, "utf8", (err) => {
-    if (err) {
-      console.error("Error writing the file:", err);
-      return;
-    }
-    console.log("URLs have been replaced successfully.");
-  });
 });
