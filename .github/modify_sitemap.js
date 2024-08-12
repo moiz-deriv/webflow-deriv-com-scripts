@@ -22,27 +22,29 @@ const argv = yargs
 // Get the new domain and input file from command-line arguments
 const newDomain = argv["new-domain"];
 const inputFile = argv["input-file"];
-// Read the input file
 fs.readFile(inputFile, "utf8", (err, data) => {
   if (err) {
     console.error("Error reading the file:", err);
     return;
   }
 
-  // Define the pattern to match the URLs
   const pattern = /https:\/\/([^.]*\.)?deriv\.(com|be|me)/g;
   const newContent = data.replace(pattern, `https://${newDomain}`);
 
-  const unwantedPattern = /deriv\.com(\/eu\b|\/[a-z-]{2,5}\/eu\b)/g;
+  const urlBlockPattern = /(<url>[\s\S]*?<\/url>)/g;
 
-  // Check if there are unwanted URLs in the original content
-  if (!unwantedPattern.test(data)) {
-    fs.writeFile(inputFile, newContent, "utf8", (err) => {
-      if (err) {
-        console.error("Error writing the file:", err);
-        return;
-      }
-      console.log("URLs have been replaced successfully.");
-    });
-  }
+  let filteredContent = newContent.replace(urlBlockPattern, (match) => {
+    if (/https:\/\/deriv\.com\/eu\//.test(match)) {
+      return "";
+    }
+    return match;
+  });
+
+  fs.writeFile(inputFile, filteredContent, "utf8", (err) => {
+    if (err) {
+      console.error("Error writing the file:", err);
+      return;
+    }
+    console.log("URLs have been replaced successfully.");
+  });
 });
