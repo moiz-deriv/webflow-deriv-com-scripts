@@ -1,4 +1,5 @@
 import { setLanguageCookie, getCookieByKey } from "../cookies";
+
 const languages = [
   "ar",
   "bn",
@@ -24,6 +25,7 @@ const languages = [
 const updateURLAsPerUserLanguage = () => {
   const current_path = window.location.pathname;
   const current_hash = window.location.hash;
+  const current_query = window.location.search; // Get query parameters
   const paths = current_path.split("/");
   const first_path = paths[1];
   const has_language_in_url = languages.includes(first_path || "");
@@ -46,10 +48,10 @@ const updateURLAsPerUserLanguage = () => {
     return;
   }
   if (!is_no_language) {
-    const updated_url = has_language_in_url
+    const updated_path = has_language_in_url
       ? paths.map((item) => (item === first_path ? language : item)).join("/")
       : language + paths.join("/");
-    const new_url = updated_url + current_hash;
+    const new_url = updated_path + current_query + current_hash;
     window.location.href = "/" + new_url;
   }
 };
