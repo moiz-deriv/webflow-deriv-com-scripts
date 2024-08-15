@@ -11,3 +11,4 @@ import "./closeMobileMenu";
 import "./liveChatFeatureFlag";
 import "./hideLiveChatExtraIcon";
 import "./derivGoDownload";
+import "./euPopUp";
