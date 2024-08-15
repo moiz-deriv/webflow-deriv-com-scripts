@@ -9,7 +9,6 @@ window.toggleErrorField = (element, isValid) => {
   }
 };
 
-// Function to disable the submit button
 window.disableButton = function (button) {
   button.disabled = true;
   button.style.opacity = "0.5";
@@ -19,7 +18,6 @@ window.isEuRegion = function (path) {
   const pattern = /^\/eu(\/|$)/;
   return pattern.test(path);
 };
-// Function to enable the submit button
 window.enableButton = function (button) {
   button.disabled = false;
   button.style.opacity = "1";
