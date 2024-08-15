@@ -1,5 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
-  if (window.isEuRegion(window.location.pathname)) {
+  const modal = document.querySelector(".redirection_background-wrapper");
+  const cancelRedirect = document.getElementById("cancel-redirect");
+  const proceedRedirect = document.getElementById("proceed-redirect");
+  if (
+    window.isEuRegion(window.location.pathname) &&
+    modal &&
+    cancelRedirect &&
+    proceedRedirect
+  ) {
     const internalDomains = [
       "deriv.me",
       "deriv.be",
@@ -10,10 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
       "docs.deriv.com",
       "community.deriv.com",
     ];
-
-    const modal = document.querySelector(".redirection_background-wrapper");
-    const cancelRedirect = document.getElementById("cancel-redirect");
-    const proceedRedirect = document.getElementById("proceed-redirect");
 
     let pendingRedirect = "";
     let currentTarget = "_self";
