@@ -15,11 +15,10 @@ window.disableButton = function (button) {
   button.style.opacity = "0.5";
 };
 
-window.isEuRegion = function (path) {
-  const pattern = /^\/eu\/?$/;
+window.isEuRegion = function isEuRegion(path) {
+  const pattern = /^\/eu(\/|$)/;
   return pattern.test(path);
 };
-
 // Function to enable the submit button
 window.enableButton = function (button) {
   button.disabled = false;
