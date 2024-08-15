@@ -15,7 +15,7 @@ window.disableButton = function (button) {
   button.style.opacity = "0.5";
 };
 
-window.isEuRegion = function isEuRegion(path) {
+window.isEuRegion = function (path) {
   const pattern = /^\/eu(\/|$)/;
   return pattern.test(path);
 };
