@@ -33,7 +33,9 @@ const updateURLAsPerUserLanguage = () => {
     paths.includes("careers") ||
     paths.includes("locations") ||
     paths.includes("derivtech") ||
-    paths.includes("derivlife");
+    paths.includes("derivlife") ||
+    paths.includes("eu-careers") ||
+    paths.includes("our-locations");
   if (has_language_in_url) {
     setLanguageCookie(first_path);
   }
