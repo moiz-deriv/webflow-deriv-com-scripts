@@ -12,3 +12,4 @@ import "./liveChatFeatureFlag";
 import "./hideLiveChatExtraIcon";
 import "./derivGoDownload";
 import "./euPopUp";
+import "./disclaimerAddClassname";
