@@ -1,3 +1,5 @@
+import { getCookieByKey } from "../cookies";
+
 // Global helper functions
 window.emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -38,6 +40,15 @@ window.getOauthUrl = function () {
     : `https://oauth.deriv.com`;
 
   return oauthUrl;
+};
+window.getClientCountry = function () {
+  const clientsCountry = getCookieByKey(document.cookie, "clients_country");
+  const client_cookie = getCookieByKey(document.cookie, "client_information");
+  if (!!client_cookie) {
+    return JSON.parse(client_cookie)?.residence || clientsCountry;
+  } else {
+    return clientsCountry;
+  }
 };
 
 window.deriv_com_url = "deriv.com";
