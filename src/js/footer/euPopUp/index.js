@@ -16,6 +16,10 @@ if (
     "app.deriv.com",
     "docs.deriv.com",
     "community.deriv.com",
+    "deriv.statuspage.io",
+    "signup.deriv.com",
+    "login.deriv.com",
+    "api.deriv.com",
   ];
 
   let pendingRedirect = "";
