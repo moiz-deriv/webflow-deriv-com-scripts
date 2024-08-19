@@ -45,10 +45,7 @@ window.getClientCountry = function () {
   const clientsCountry = getCookieByKey(document.cookie, "clients_country");
   const client_cookie = getCookieByKey(document.cookie, "client_information");
   if (!!client_cookie) {
-    return (
-      JSON.parse(window.parseCookies(document.cookie, "client_information"))
-        ?.residence || clientsCountry
-    );
+    return JSON.parse(client_cookie)?.residence || clientsCountry;
   } else {
     return clientsCountry;
   }
