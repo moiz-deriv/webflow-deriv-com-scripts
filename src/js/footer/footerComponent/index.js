@@ -2,7 +2,7 @@ import { hideElems, showElems } from "./data.js";
 import { getCookieByKey } from "../cookies";
 
 export default () => {
-  const clientsCountry = getCookieByKey(document.cookie, "clients_country");
+  const clientsCountry = window.getClientCountry();
   hideElems.forEach((array) => {
     const shouldHide =
       array.id === "hideDiel"

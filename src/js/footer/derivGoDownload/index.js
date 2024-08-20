@@ -251,7 +251,7 @@ const country = [
   { country: "zm", apple: "Yes", android: "Yes", huawei: "No" },
   { country: "zw", apple: "Yes", android: "Yes", huawei: "No" },
 ];
-const clientsCountry = getCookieByKey(document.cookie, "clients_country");
+const clientsCountry = window.getClientCountry();
 
 // Function to generate the text based on platform availability
 function generateText(platforms) {
