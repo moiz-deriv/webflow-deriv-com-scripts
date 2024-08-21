@@ -16,9 +16,12 @@ window.disableButton = function (button) {
   button.style.opacity = "0.5";
 };
 
-window.isEuRegion = function (path) {
-  const pattern = /^\/eu(\/|$)/;
-  return pattern.test(path);
+window.isEuRegion = function (pathname) {
+  const normalizedPath = pathname.replace(/\/$/, "");
+
+  const pattern = /^\/(?:[^\/]+\/)?eu(?:\/|$)/;
+
+  return pattern.test(normalizedPath);
 };
 window.enableButton = function (button) {
   button.disabled = false;
