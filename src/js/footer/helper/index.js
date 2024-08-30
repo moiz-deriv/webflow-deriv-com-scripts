@@ -103,6 +103,7 @@ window.getAppId = () => {
   return window.domain_list_app_id[window.deriv_com_url];
 };
 
+//Login Generation Code Block
 const getCookiesFields = () => [
   "utm_source",
   "utm_ad_id",
