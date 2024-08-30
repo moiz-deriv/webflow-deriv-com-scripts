@@ -102,3 +102,91 @@ window.getAppId = () => {
 
   return window.domain_list_app_id[window.deriv_com_url];
 };
+
+const getCookiesFields = () => [
+  "utm_source",
+  "utm_ad_id",
+  "utm_adgroup_id",
+  "utm_adrollclk_id",
+  "utm_campaign",
+  "utm_campaign_id",
+  "utm_content",
+  "utm_fbcl_id",
+  "utm_gl_client_id",
+  "utm_medium",
+  "utm_msclk_id",
+  "utm_term",
+];
+
+const getUTMData = () => {
+  const utmDataString = getCookieByKey(document.cookie, "utm_data");
+  if (utmDataString) {
+    const utmData = JSON.parse(utmDataString);
+    const cookiesFields = getCookiesFields();
+    const filteredData = {};
+
+    cookiesFields.forEach((field) => {
+      if (utmData.hasOwnProperty(field)) {
+        filteredData[field] = utmData[field];
+      }
+    });
+
+    return filteredData;
+  }
+  return null;
+};
+
+const getDataLink = (data) => {
+  let data_link = "";
+  if (data) {
+    Object.keys(data).forEach((elem) => {
+      data_link += `&${elem}=${data[elem]}`;
+    });
+  }
+  return data_link;
+};
+
+const getDomainAppID = () => {
+  const domainUrl = window.getDomain();
+  if (domainUrl === window.deriv_me_url) {
+    return window.domain_list_app_id[window.deriv_me_url];
+  } else if (domainUrl === window.deriv_be_url) {
+    return window.domain_list_app_id[window.deriv_be_url];
+  } else if (domainUrl === window.webflow_domain) {
+    return window.domain_list_app_id[window.webflow_domain];
+  } else {
+    return window.domain_list_app_id[window.deriv_com_url];
+  }
+};
+
+window.loginUrl = () => {
+  const server_url = localStorage.getItem("config.server_url");
+  const langCookie = getCookieByKey(document.cookie, "webflow-user-language");
+  let language = langCookie ? langCookie.toLowerCase() : "en";
+
+  if (language === "zh-cn" || language === "zh-tw") {
+    language = language.replace("-", "_");
+  }
+  const cookies_value = getUTMData();
+  const cookies_link = getDataLink(cookies_value);
+
+  const affiliate_token = getCookieByKey(document.cookie, "affiliate_tracking");
+
+  const affiliate_token_link = affiliate_token
+    ? `&affiliate_token=${affiliate_token}`
+    : "";
+
+  // Function which returns sub path to the specific trading platform
+  const supported_platforms = ["mt5", "bot", "derivx"];
+  const redirectToTradingPlatform = () => {
+    supported_platforms.filter(
+      (platform) => window.location.pathname.includes(platform) && platform
+    );
+  };
+  const sub_url = redirectToTradingPlatform() || "";
+
+  if (server_url && /qa/.test(server_url)) {
+    return `https://${server_url}/oauth2/authorize?app_id=${window.getAppId()}&l=${language}&brand=deriv${affiliate_token_link}${cookies_link}&platform=${sub_url}`;
+  }
+  return `${window.getOauthUrl()}/oauth2/authorize?app_id=${getDomainAppID()}&l=${language}&brand=deriv${affiliate_token_link}${cookies_link}&platform=${sub_url}`;
+};
