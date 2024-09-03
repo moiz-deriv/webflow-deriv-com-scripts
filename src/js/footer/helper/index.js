@@ -160,7 +160,7 @@ const getDomainAppID = () => {
   }
 };
 
-window.loginUrl = () => {
+export const loginUrl = () => {
   const server_url = localStorage.getItem("config.server_url");
   const langCookie = getCookieByKey(document.cookie, "webflow-user-language");
   let language = langCookie ? langCookie.toLowerCase() : "en";
