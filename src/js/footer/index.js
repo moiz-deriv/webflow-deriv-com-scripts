@@ -15,4 +15,3 @@ import "./euPopUp";
 import "./disclaimerAddClassname";
 import "./mobileMenuAccordian";
 import "./loginFunctions";
-import { loginUrl } from "./helper";
