@@ -15,3 +15,4 @@ import "./euPopUp";
 import "./disclaimerAddClassname";
 import "./mobileMenuAccordian";
 import "./partnerAffiliate";
+import "./loginFunctions";
