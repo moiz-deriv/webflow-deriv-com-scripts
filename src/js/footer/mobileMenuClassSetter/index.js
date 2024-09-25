@@ -2,6 +2,22 @@
 document.addEventListener("DOMContentLoaded", function () {
   // Find all accordion triggers
   let triggers = document.querySelectorAll(".navbar_accordion-trigger");
+  let navbarMenuBtn = document.querySelector(".navbar_menu-button");
+
+  if (navbarMenuBtn) {
+    navbarMenuBtn.addEventListener("click", function () {
+      let windowHeight = window.innerHeight;
+      let navbarWrapper = document.querySelector(".new-navbar_main-wrapper");
+      if (navbarWrapper) {
+        let navbarHeight = navbarWrapper.offsetHeight;
+        let calculatedHeight = windowHeight - navbarHeight;
+        let navbarMenu = document.querySelector(".new-navbar_menu");
+        if (navbarMenu) {
+          navbarMenu.style.height = `${calculatedHeight}px`;
+        }
+      }
+    });
+  }
 
   triggers.forEach((trigger) => {
     trigger.addEventListener("click", function () {
