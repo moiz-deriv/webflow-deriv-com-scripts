@@ -130,7 +130,7 @@ checkLoggedIn();
 
 // Set interval to periodically check authentication status
 checkCookieInterval = setInterval(checkLoggedIn, 2000);
-//end of dashboard send data
+//end of dashboard send data code
 
 document.addEventListener("DOMContentLoaded", () => {
   loadLiveChatScript();
