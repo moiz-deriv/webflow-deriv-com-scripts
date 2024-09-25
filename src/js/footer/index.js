@@ -4,8 +4,6 @@ import "./websocket"; // always keep this at the top
 import "./clientsCountryCookie";
 import "./updateUrlAsPerLanguage";
 // import "./footerComponent/index.js";
-// import "./footerComponent/index.js";
-
 import "./dynamicCtaLabels/index.js";
 import "./hide-deriv-go";
 import "./changeBannerPadding";
