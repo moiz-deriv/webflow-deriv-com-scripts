@@ -31,6 +31,14 @@ function fetchChatData() {
             : "hidden";
         }
         const isHelpCentre = window.location.pathname.includes("/help-centre");
+        const isPrime = window.location.pathname.includes("/deriv-prime");
+
+        if (isPrime) {
+          const whatappChatBtns = document.querySelectorAll(".whatsapp_chat");
+          whatappChatBtns.forEach((btn) => {
+            btn.style.visibility = "hidden";
+          });
+        }
 
         if (isHelpCentre) {
           const liveChatBtns = document.querySelectorAll(".livechatbtn");
