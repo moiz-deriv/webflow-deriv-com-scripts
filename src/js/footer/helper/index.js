@@ -210,7 +210,7 @@ const handleOutSystemsRedirection = () => {
     case "production":
       return "https://hub.deriv.com/tradershub/preload-helper";
     case "staging":
-      return "https://hub.deriv.com/tradershub/preload-helper";
+      return "https://staging-hub.deriv.com/tradershub/preload-helper";
     default:
       return "https://hub.deriv.com/tradershub/preload-helper";
   }
