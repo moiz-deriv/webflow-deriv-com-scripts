@@ -15,12 +15,13 @@ if (localeItems.length > 0) {
     });
   });
 
-  function clickLinkWithLanguage(language) {
+  const clickLinkWithLanguage = (language) => {
     let link = document.querySelector('a[hreflang="' + language + '"]');
     if (link && window.location.pathname !== link.getAttribute("href")) {
       link.click();
     }
-  }
+  };
+
   window.setLanguageCookie = (language) => {
     setCookie("webflow-user-language", language, 30);
   };
@@ -39,13 +40,13 @@ if (localeItems.length > 0) {
   ];
 
   let path = window.location.pathname;
-  let targetPathUrl = false;
+  let isTargetPath = false;
 
   // Check if the current path matches any of the target paths
   if (targetPaths.some((targetPath) => path.includes(targetPath))) {
-    targetPathUrl === true;
+    isTargetPath === true;
   }
-  if (languageCookie && targetPathUrl) {
+  if (languageCookie && isTargetPath) {
     clickLinkWithLanguage(languageCookie);
   }
 }
