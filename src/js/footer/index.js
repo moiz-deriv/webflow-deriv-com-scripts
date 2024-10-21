@@ -18,3 +18,4 @@ import "./partnerAffiliate";
 import "./loginFunctions";
 import "./removeHrefLang";
 import "./displayCurrentLang";
+import "./languageCookie";
