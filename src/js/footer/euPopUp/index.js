@@ -10,6 +10,7 @@ const clientInformation = getCookieByKey(document.cookie, "client_information");
 const isLoggedIn = !!clientInformation;
 const acceptButton = document.getElementById("accept-cookie");
 const declineButton = document.getElementById("dont-accept-cookie");
+const popupElement = document.querySelector(".cookies_background-wrapper");
 
 document.addEventListener("DOMContentLoaded", () => {
   if (hasDataLayer) {
