@@ -19,3 +19,4 @@ import "./loginFunctions";
 import "./removeHrefLang";
 import "./displayCurrentLang";
 import "./languageCookie";
+import "./p2pRedirection";
