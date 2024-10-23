@@ -16,6 +16,7 @@ import "./disclaimerAddClassname";
 import "./mobileMenuAccordian";
 import "./partnerAffiliate";
 import "./loginFunctions";
+import "./mobileMenuClassSetter";
 import "./removeHrefLang";
 import "./displayCurrentLang";
 import "./languageCookie";
