@@ -1,0 +1,52 @@
+/* Style for disabling scroll */
+.disable-scroll {
+  overflow: hidden;
+}
+/* removing scroll bar(vertical) */
+::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 992px) and (max-width: 1200px) {
+  .new-navbar_menu-left-desctop {
+    font-size: 14px;
+    /* Adjust the font size of menus in the custom breakpoint */
+  }
+
+  .new-navbar_dropdown-toggle,
+  .new-navbar_link {
+    padding: 0.5rem 0.75rem;
+    /* Adjust the padding of menus in the custom breakpoint */
+  }
+
+  header h1 {
+    font-size: 3rem;
+    /* Adjust the font size of header texts in the custom breakpoint */
+  }
+
+  header p {
+    font-size: 14px;
+    /* Adjust the font size of p texts and their width in header in the custom breakpoint */
+    width: 81%;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  /* Adjusts for mobile landscape */
+  .tabs_menu-scroll-mobile {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scrolling on iOS devices */
+    scrollbar-width: none;
+    /* For Firefox */
+  }
+}
+
+* {
+  scrollbar-width: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -o-font-smoothing: antialiased;
+}

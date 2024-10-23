@@ -25,7 +25,7 @@ const languages = [
 const updateURLAsPerUserLanguage = () => {
   const current_path = window.location.pathname;
   const current_hash = window.location.hash;
-  const current_query = window.location.search; // Get query parameters
+  const current_query = window.location.search;
   const paths = current_path.split("/");
   const first_path = paths[1];
   const has_language_in_url = languages.includes(first_path || "");
@@ -35,7 +35,9 @@ const updateURLAsPerUserLanguage = () => {
     paths.includes("derivtech") ||
     paths.includes("derivlife") ||
     paths.includes("eu-careers") ||
-    paths.includes("our-locations");
+    paths.includes("our-locations") ||
+    paths.includes("academy") ||
+    paths.includes("trading-terms-glossary");
   if (has_language_in_url) {
     setLanguageCookie(first_path);
   }

@@ -5,6 +5,7 @@ let is_whatapp_visible = false;
 
 function fetchChatData() {
   const liveChatWrapper = document.getElementById("live_chat-wrapper");
+
   try {
     const dataRef = ref(db, "remote_config/deriv-com/chat");
     onValue(
@@ -31,6 +32,15 @@ function fetchChatData() {
             : "hidden";
         }
         const isHelpCentre = window.location.pathname.includes("/help-centre");
+        const isPrime = window.location.pathname.includes("/deriv-prime");
+
+        if (isPrime) {
+          liveChatWrapper.style.flexDirection = "column-reverse";
+          const whatappChatBtns = document.querySelectorAll(".whatsapp_chat");
+          whatappChatBtns.forEach((btn) => {
+            btn.style.visibility = "hidden";
+          });
+        }
 
         if (isHelpCentre) {
           const liveChatBtns = document.querySelectorAll(".livechatbtn");
