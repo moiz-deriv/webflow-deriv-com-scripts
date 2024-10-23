@@ -1,5 +1,7 @@
+import { getCookieByKey } from "../cookies";
+
 document.addEventListener("DOMContentLoaded", function () {
-  const lang = window.parseCookies(document.cookie, "webflow-user-language");
+  const lang = getCookieByKey(document.cookie, "webflow-user-language");
 
   const countriesToRedirect = [
     "as",
