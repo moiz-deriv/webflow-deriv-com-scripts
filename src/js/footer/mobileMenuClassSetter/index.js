@@ -4,6 +4,20 @@ document.addEventListener("DOMContentLoaded", function () {
   let triggers = document.querySelectorAll(".navbar_accordion-trigger");
   let navbarMenuBtn = document.querySelector(".navbar_menu-button");
 
+  if (document.querySelector(".new-navbar_component")) {
+    const navbarComponent = document.querySelector(".new-navbar_component");
+    navbarComponent.addEventListener("mouseenter", () => {
+      if (window.innerWidth > 991) {
+        document.body.classList.add("disable-scroll");
+      }
+    });
+    navbarComponent.addEventListener("mouseleave", () => {
+      if (window.innerWidth > 991) {
+        document.body.classList.remove("disable-scroll");
+      }
+    });
+  }
+
   if (navbarMenuBtn) {
     navbarMenuBtn.addEventListener("click", function () {
       let windowHeight = window.innerHeight;
