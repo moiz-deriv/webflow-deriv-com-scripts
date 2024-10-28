@@ -47,8 +47,8 @@ jobs:
           deriv_be_site_id: ${{ secrets.DERIV_BE_SITE_ID }}
           webflow_general_site_id: ${{ secrets.WEBFLOW_GENERAL_SITE_ID }}
       
-      #Trigger scraper workflow only when deriv.com/deriv.be/deriv.me is published
-      - name: Trigger Scraper Workflow
+      # Trigger DR workflow only on production publishes.
+      - name: Trigger DR Workflow
         if: contains(steps.publish.outputs.SITES_ARRAY, 'deriv.com') || contains(steps.publish.outputs.SITES_ARRAY, 'deriv.be') || contains(steps.publish.outputs.SITES_ARRAY, 'deriv.me')
         run: |
           repo_owner=${{ secrets.REPO_OWNER }}
