@@ -49,7 +49,7 @@ jobs:
       
       #Trigger scraper workflow only when deriv.com/deriv.be/deriv.me is published
       - name: Trigger Scraper Workflow
-        if: ${{ needs.publish.outputs.SITES_ARRAY == 'deriv.com' || needs.publish.outputs.SITES_ARRAY == 'deriv.be' || needs.publish.outputs.SITES_ARRAY == 'deriv.me' }}
+        if: contains(steps.publish.outputs.SITES_ARRAY, 'deriv.com') || contains(steps.publish.outputs.SITES_ARRAY, 'deriv.be') || contains(steps.publish.outputs.SITES_ARRAY, 'deriv.me')
         run: |
           repo_owner=${{ secrets.REPO_OWNER }}
           repo_name=${{ secrets.REPO_NAME }}
