@@ -2,11 +2,11 @@ name: "Publish Website to Webflow"
 description: "Map site labels to site IDs and deploy to Webflow"
 inputs:
   site_label_staging:
-    description: "Publish to staging.deriv.com"
+    description: "Publish to Staging"
     required: true
     default: 'false'
   site_label_production:
-    description: 'Publish to Prouction'
+    description: 'Publish to Production'
     required: true
     default: 'false'
   webflow_api_token:
