@@ -38,7 +38,7 @@ fs.readFile(inputFile, "utf8", (err, data) => {
   const locDirectPattern = new RegExp(`https://${newDomain}\/locations\/`, "i"); // Matches URLs directly starting with /locations
 
   let filteredContent = newContent.replace(urlBlockPattern, (match) => {
-    if (/https:\/\/deriv\.com(\/[a-z-]{2,5})?\/eu\//.test(match)) {
+    if (/https:\/\/deriv\.com(\/[a-z-]{2,5})?\/eu(\/)?/.test(match)) {
       return "";
     }
     // Check if the <loc> tag itself contains an extra segment and should be removed
