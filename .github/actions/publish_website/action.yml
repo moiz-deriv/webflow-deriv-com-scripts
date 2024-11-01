@@ -2,21 +2,13 @@ name: "Publish Website to Webflow"
 description: "Map site labels to site IDs and deploy to Webflow"
 inputs:
   site_label_staging:
-    description: "Publish to staging.deriv.com"
+    description: "Publish to Staging"
     required: true
-    default: "false"
-  site_label_deriv_com:
-    description: "Publish to deriv.com"
+    default: 'false'
+  site_label_production:
+    description: 'Publish to Production'
     required: true
-    default: "false"
-  site_label_deriv_me:
-    description: "Publish to deriv.me"
-    required: true
-    default: "false"
-  site_label_deriv_be:
-    description: "Publish to deriv.be"
-    required: true
-    default: "false"
+    default: 'false'
   webflow_api_token:
     description: "Webflow API Token"
     required: true
@@ -52,15 +44,11 @@ runs:
           SITES_TO_PUBLISH+=("\"staging.deriv.com\"")
           SITES_DEPLOY_IDS+=("\"${{ inputs.staging_site_id }}\"")
         fi
-        if [ "${{ inputs.site_label_deriv_com }}" == "true" ]; then
+        if [ "${{ inputs.site_label_production }}" == "true" ]; then
           SITES_TO_PUBLISH+=("\"deriv.com\"")
           SITES_DEPLOY_IDS+=("\"${{ inputs.deriv_com_site_id }}\"")
-        fi
-        if [ "${{ inputs.site_label_deriv_me }}" == "true" ]; then
           SITES_TO_PUBLISH+=("\"deriv.me\"")
           SITES_DEPLOY_IDS+=("\"${{ inputs.deriv_me_site_id }}\"")
-        fi
-        if [ "${{ inputs.site_label_deriv_be }}" == "true" ]; then
           SITES_TO_PUBLISH+=("\"deriv.be\"")
           SITES_DEPLOY_IDS+=("\"${{ inputs.deriv_be_site_id }}\"")
         fi
