@@ -1,11 +1,11 @@
 name: "Publish Website to Webflow"
 description: "Map site labels to site IDs and deploy to Webflow"
 inputs:
-  site_label_staging:
+  staging_release:
     description: "Publish to Staging"
     required: true
     default: 'false'
-  site_label_production:
+  production_release:
     description: 'Publish to Production'
     required: true
     default: 'false'
@@ -40,11 +40,11 @@ runs:
       run: |
         SITES_TO_PUBLISH=()
         SITES_DEPLOY_IDS=()
-        if [ "${{ inputs.site_label_staging }}" == "true" ]; then
+        if [ "${{ inputs.staging_release }}" == "true" ]; then
           SITES_TO_PUBLISH+=("\"staging.deriv.com\"")
           SITES_DEPLOY_IDS+=("\"${{ inputs.staging_site_id }}\"")
         fi
-        if [ "${{ inputs.site_label_production }}" == "true" ]; then
+        if [ "${{ inputs.production_release }}" == "true" ]; then
           SITES_TO_PUBLISH+=("\"deriv.com\"")
           SITES_DEPLOY_IDS+=("\"${{ inputs.deriv_com_site_id }}\"")
           SITES_TO_PUBLISH+=("\"deriv.me\"")
