@@ -32,12 +32,26 @@ fs.readFile(inputFile, "utf8", (err, data) => {
   const newContent = data.replace(pattern, `https://${newDomain}`);
 
   const urlBlockPattern = /(<url>[\s\S]*?<\/url>)/g;
+  const xhtmlLinkPattern =
+    /(<xhtml:link[^>]*?href="https:\/\/[^\/]+\/[^\/]+\/locations[^"]*"[^>]*?>)/g;
+  const locPattern = new RegExp(`https://${newDomain}\/[^\/]+\/locations`, "i"); // Matches URLs with an extra segment before /locations
+  const locDirectPattern = new RegExp(`https://${newDomain}\/locations\/`, "i"); // Matches URLs directly starting with /locations
 
   let filteredContent = newContent.replace(urlBlockPattern, (match) => {
-    if (/https:\/\/deriv\.com(\/[a-z-]{2,5})?\/eu\//.test(match)) {
+    if (/https:\/\/deriv\.com(\/[a-z-]{2,5})?\/eu(\/)?/.test(match)) {
       return "";
     }
-    return match;
+    // Check if the <loc> tag itself contains an extra segment and should be removed
+    if (locPattern.test(match) && !locDirectPattern.test(match)) {
+      return ""; // Remove entire <url> block if <loc> contains an unwanted segment
+    }
+    const cleanedMatch = match.replace(xhtmlLinkPattern, (xhtmlLink) => {
+      if (locPattern.test(xhtmlLink) && !locDirectPattern.test(xhtmlLink)) {
+        return ""; // Remove <xhtml:link> element with extra segment before /locations
+      }
+      return xhtmlLink; // Keep valid <xhtml:link> elements
+    });
+    return cleanedMatch;
   });
 
   fs.writeFile(inputFile, filteredContent, "utf8", (err) => {

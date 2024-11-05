@@ -3,21 +3,13 @@ name: Publish website and Upload sitemap and robots
 on:
   workflow_dispatch:
     inputs:
-      site_label_staging:
+      staging_release:
         type: boolean
-        description: "staging.deriv.com"
+        description: "Staging"
         default: false
-      site_label_deriv_com:
+      production_release:
         type: boolean
-        description: "deriv.com"
-        default: false
-      site_label_deriv_me:
-        type: boolean
-        description: "deriv.me"
-        default: false
-      site_label_deriv_be:
-        type: boolean
-        description: "deriv.be"
+        description: "Production"
         default: false
 
 jobs:
@@ -36,10 +28,8 @@ jobs:
         id: publish
         uses: ./.github/actions/publish_website
         with:
-          site_label_staging: ${{ github.event.inputs.site_label_staging }}
-          site_label_deriv_com: ${{ github.event.inputs.site_label_deriv_com }}
-          site_label_deriv_me: ${{ github.event.inputs.site_label_deriv_me }}
-          site_label_deriv_be: ${{ github.event.inputs.site_label_deriv_be }}
+          staging_release: ${{ github.event.inputs.staging_release }}
+          production_release: ${{ github.event.inputs.production_release }}
           webflow_api_token: ${{ secrets.WEBFLOW_API_TOKEN }}
           staging_site_id: ${{ secrets.STAGING_SITE_ID }}
           deriv_com_site_id: ${{ secrets.DERIV_COM_SITE_ID }}
@@ -84,7 +74,7 @@ jobs:
   generate_sitemap_and_robots:
     runs-on: ubuntu-latest
     needs: publish_site
-    if: ${{ needs.publish_site.result == 'success' && ( github.event.inputs.site_label_deriv_com == 'true' || github.event.inputs.site_label_deriv_me == 'true' || github.event.inputs.site_label_deriv_be == 'true') }}
+    if: ${{ needs.publish_site.result == 'success' && github.event.inputs.production_release == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

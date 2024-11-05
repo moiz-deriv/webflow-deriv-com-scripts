@@ -34,6 +34,7 @@ const updateURLAsPerUserLanguage = () => {
     paths.includes("locations") ||
     paths.includes("derivtech") ||
     paths.includes("derivlife") ||
+    paths.includes("trading-terms-glossary") ||
     paths.includes("eu-careers") ||
     paths.includes("our-locations") ||
     paths.includes("academy");
