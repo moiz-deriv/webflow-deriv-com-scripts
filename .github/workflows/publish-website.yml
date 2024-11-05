@@ -37,9 +37,9 @@ jobs:
           deriv_be_site_id: ${{ secrets.DERIV_BE_SITE_ID }}
           webflow_general_site_id: ${{ secrets.WEBFLOW_GENERAL_SITE_ID }}
       
-      # Trigger DR workflow only on production publishes.
+      # Trigger DR workflow only on production release.
       - name: Trigger DR Workflow
-        if: contains(steps.publish.outputs.SITES_ARRAY, 'deriv.com') || contains(steps.publish.outputs.SITES_ARRAY, 'deriv.be') || contains(steps.publish.outputs.SITES_ARRAY, 'deriv.me')
+        if: ${{ github.event.inputs.production_release == 'true' }}
         run: |
           repo_owner=${{ secrets.REPO_OWNER }}
           repo_name=${{ secrets.REPO_NAME }}
