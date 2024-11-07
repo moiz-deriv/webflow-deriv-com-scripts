@@ -41,7 +41,7 @@ jobs:
       - name: Trigger DR Workflow
         if: ${{ github.event.inputs.production_release == 'true' }}
         run: |
-          repo_owner=${{ secrets.REPO_OWNER }}
+          repo_owner=${{ secrets.DR_REPO_OWNER }}
           repo_name=${{ secrets.REPO_NAME }}
 
           curl -X POST \
