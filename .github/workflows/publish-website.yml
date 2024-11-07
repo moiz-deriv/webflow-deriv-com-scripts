@@ -39,7 +39,7 @@ jobs:
       
       # Trigger DR workflow only on production release.
       - name: Trigger DR Workflow
-        if: ${{ github.event.inputs.production_release == 'true' }}
+      #  if: ${{ github.event.inputs.production_release == 'true' }}
         run: |
           repo_owner=${{ secrets.DR_REPO_OWNER }}
           repo_name=${{ secrets.DR_REPO_NAME }}
