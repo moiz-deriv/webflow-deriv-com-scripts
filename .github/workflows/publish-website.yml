@@ -46,7 +46,7 @@ jobs:
 
           curl -X POST \
           -H "Accept: application/vnd.github.v3+json" \
-          -H "Authorization: token ${{ secrets.PAT }}" \
+          -H "Authorization: token ${{ secrets.DR_REPO_PAT }}" \
           https://api.github.com/repos/$repo_owner/$repo_name/dispatches \
           -d "{\"event_type\": \"trigger-sitemap-download\"}"
 
