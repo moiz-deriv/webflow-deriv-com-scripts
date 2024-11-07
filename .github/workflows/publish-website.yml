@@ -42,7 +42,7 @@ jobs:
         if: ${{ github.event.inputs.production_release == 'true' }}
         run: |
           repo_owner=${{ secrets.DR_REPO_OWNER }}
-          repo_name=${{ secrets.REPO_NAME }}
+          repo_name=${{ secrets.DR_REPO_NAME }}
 
           curl -X POST \
           -H "Accept: application/vnd.github.v3+json" \
