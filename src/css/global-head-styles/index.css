@@ -26,8 +26,7 @@
 
   header p {
     font-size: 14px;
-    /* Adjust the font size of p texts and their width in header in the custom breakpoint */
-    width: 81%;
+    /* width: 81%; */
   }
 }
 
