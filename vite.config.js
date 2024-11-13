@@ -13,6 +13,10 @@ export default defineConfig({
       input: {
         head_scripts: resolve(__dirname, "src/js/head/index.js"),
         footer_scripts: resolve(__dirname, "src/js/footer/index.js"),
+        trading_central_scripts: resolve(
+          __dirname,
+          "src/js/tradingCentral/index.js"
+        ),
         styles: resolve(__dirname, "src/css/index.css"),
       },
       output: {
