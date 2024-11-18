@@ -1,1 +1,1 @@
-import "./economicCalnder";
+import "./economicCalendar";
