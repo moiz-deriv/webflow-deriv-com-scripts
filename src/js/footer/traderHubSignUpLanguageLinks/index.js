@@ -1,6 +1,6 @@
 import { getCookieByKey } from "../cookies";
 
-const allowedLangs = ["en", "fr", "de", "it", "es", "pt", "pl", "ru", "ar"];
+const allowedLangs = ["en", "fr", "de", "it", "es", "pt", "pl", "ru"];
 
 document.addEventListener("DOMContentLoaded", function () {
   let languageCookie = getCookieByKey(document.cookie, "webflow-user-language");
