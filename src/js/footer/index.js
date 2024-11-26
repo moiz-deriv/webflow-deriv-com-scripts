@@ -5,6 +5,7 @@ import "./clientsCountryCookie";
 import "./updateUrlAsPerLanguage";
 // import "./footerComponent/index.js";
 import "./dynamicCtaLabels/index.js";
+import "./traderHubSignUpLanguageLinks";
 import "./changeBannerPadding";
 import "./closeMobileMenu";
 import "./liveChatFeatureFlag";
