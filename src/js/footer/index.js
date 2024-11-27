@@ -1,4 +1,4 @@
-// All the footer js files should be imported and exported from here
+// All the footer js files should be imported and exported from here in this file
 import "./helper"; // always keep this at the top
 import "./websocket"; // always keep this at the top
 import "./clientsCountryCookie";
