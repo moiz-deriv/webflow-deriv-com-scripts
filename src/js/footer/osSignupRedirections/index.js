@@ -6,12 +6,12 @@ document.addEventListener("DOMContentLoaded", function () {
   let languageCookie = getCookieByKey(document.cookie, "webflow-user-language");
   let signupLink = "";
   if (
-    languageCookie.toLowerCase() === "en" &&
+    (languageCookie?.toLowerCase() === "en" || !languageCookie) &&
     window.location.pathname.includes("/eu/")
   ) {
     signupLink = window.location.origin + "/eu/signup";
   } else {
-    if (languageCookie.toLowerCase() === "en") {
+    if (languageCookie?.toLowerCase() === "en" || !languageCookie) {
       signupLink = window.location.origin + "/signup";
     } else {
       if (window.location.pathname.includes("/eu/")) {
@@ -28,14 +28,14 @@ document.addEventListener("DOMContentLoaded", function () {
   );
   if (
     allowedLangs.includes(
-      languageCookie.toLowerCase() && window.location.pathname.includes("/eu/")
+      languageCookie?.toLowerCase() && window.location.pathname.includes("/eu/")
     )
   ) {
     signupBtn.forEach((link) => {
       link.href = `${window.location.origin}/eu/signup?lang=${languageCookie}`;
     });
   } else {
-    if (allowedLangs.includes(languageCookie.toLowerCase())) {
+    if (allowedLangs.includes(languageCookie?.toLowerCase())) {
       signupBtn.forEach((link) => {
         link.href = `${window.location.origin}/signup?lang=${languageCookie}`;
       });
