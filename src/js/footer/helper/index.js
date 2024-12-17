@@ -1,5 +1,7 @@
 import { getCookieByKey } from "../cookies";
 
+const DEFAULT_SERVER_URL = "green.derivws.com";
+
 // Global helper functions
 window.emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -160,14 +162,16 @@ const getDomainAppID = () => {
   }
 };
 
+export const getServerUrl = () => {
+  try {
+    return localStorage.getItem("config.server_url") || DEFAULT_SERVER_URL;
+  } catch (error) {
+    return DEFAULT_SERVER_URL;
+  }
+};
+
 export const loginUrl = () => {
-  const server_url = () => {
-    try {
-      return localStorage.getItem("config.server_url") || "green.derivws.com";
-    } catch (error) {
-      return "green.derivws.com";
-    }
-  };
+  const server_url = getServerUrl();
   const langCookie = getCookieByKey(document.cookie, "webflow-user-language");
   let language = langCookie ? langCookie.toLowerCase() : "en";
 
