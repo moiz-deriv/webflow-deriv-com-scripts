@@ -161,7 +161,13 @@ const getDomainAppID = () => {
 };
 
 export const loginUrl = () => {
-  const server_url = localStorage.getItem("config.server_url");
+  const server_url = () => {
+    try {
+      return localStorage.getItem("config.server_url") || "green.derivws.com";
+    } catch (error) {
+      return "green.derivws.com";
+    }
+  };
   const langCookie = getCookieByKey(document.cookie, "webflow-user-language");
   let language = langCookie ? langCookie.toLowerCase() : "en";
 
