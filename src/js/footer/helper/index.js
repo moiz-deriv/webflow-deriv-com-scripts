@@ -163,9 +163,9 @@ const getDomainAppID = () => {
 };
 
 export const getServerUrl = () => {
-  try {
+  if (!!window?.localStorage) {
     return localStorage.getItem("config.server_url") || DEFAULT_SERVER_URL;
-  } catch (error) {
+  } else {
     return DEFAULT_SERVER_URL;
   }
 };
