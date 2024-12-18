@@ -1,11 +1,11 @@
 import { getCookieByKey } from "../cookies";
+import { getServerUrl } from "../helper";
 
 window.establishWebSocketConnection = () => {
   return new Promise((resolve, reject) => {
     const langCookie = getCookieByKey(document.cookie, "webflow-user-language");
     const language = langCookie ? langCookie.toLowerCase() : "en";
-    const server_url =
-      localStorage.getItem("config.server_url") || "green.derivws.com";
+    const server_url = getServerUrl();
     window.websocket = new WebSocket(
       `wss://${server_url}/websockets/v3?app_id=${window.getAppId()}&l=${
         language || "en"
