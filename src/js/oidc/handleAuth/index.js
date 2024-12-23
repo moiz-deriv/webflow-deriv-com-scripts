@@ -1,7 +1,6 @@
 import { getCookieByKey } from "../../footer/cookies";
 
 function displayErrorState() {
-  //Update to ui elements to show error
   document.getElementById("error").style.display = "block";
   document.getElementById("loading").style.display = "none";
 }
