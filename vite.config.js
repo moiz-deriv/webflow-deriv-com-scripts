@@ -17,6 +17,7 @@ export default defineConfig({
           __dirname,
           "src/js/tradingCentral/index.js"
         ),
+        oidc: resolve(__dirname, "src/js/oidc/index.js"),
         styles: resolve(__dirname, "src/css/index.css"),
       },
       output: {
