@@ -98,6 +98,15 @@ window.getAppId = () => {
     [window.staging_url]: window.domain_list_app_id[window.staging_url],
   };
 
+  if (typeof window.useGrowthbookFeatureFlag === "function") {
+    window.isTHLogin = window.useGrowthbookFeatureFlag({
+      featureFlag: "trigger_login_for_hub",
+    });
+    if (typeof window.isTHLogin === "boolean") {
+      return 61554;
+    }
+  }
+
   if (specificDomainAppId[domainUrl]) {
     return specificDomainAppId[domainUrl];
   }
