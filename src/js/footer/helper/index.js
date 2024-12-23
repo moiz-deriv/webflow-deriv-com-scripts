@@ -102,7 +102,7 @@ window.getAppId = () => {
     window.isTHLogin = window.useGrowthbookFeatureFlag({
       featureFlag: "trigger_login_for_hub",
     });
-    if (typeof window.isTHLogin === "boolean") {
+    if (typeof window.isTHLogin === "boolean" && window.isTHLogin) {
       return 61554;
     }
   }
