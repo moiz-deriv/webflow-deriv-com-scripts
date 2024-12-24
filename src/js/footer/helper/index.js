@@ -1,5 +1,7 @@
 import { getCookieByKey } from "../cookies";
 
+const DEFAULT_SERVER_URL = "green.derivws.com";
+
 // Global helper functions
 window.emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -96,6 +98,15 @@ window.getAppId = () => {
     [window.staging_url]: window.domain_list_app_id[window.staging_url],
   };
 
+  if (typeof window.useGrowthbookFeatureFlag === "function") {
+    window.isTHLogin = window.useGrowthbookFeatureFlag({
+      featureFlag: "trigger_login_for_hub",
+    });
+    if (typeof window.isTHLogin === "boolean" && window.isTHLogin) {
+      return 61554;
+    }
+  }
+
   if (specificDomainAppId[domainUrl]) {
     return specificDomainAppId[domainUrl];
   }
@@ -160,8 +171,16 @@ const getDomainAppID = () => {
   }
 };
 
+export const getServerUrl = () => {
+  if (!!window?.localStorage) {
+    return localStorage.getItem("config.server_url") || DEFAULT_SERVER_URL;
+  } else {
+    return DEFAULT_SERVER_URL;
+  }
+};
+
 export const loginUrl = () => {
-  const server_url = localStorage.getItem("config.server_url");
+  const server_url = getServerUrl();
   const langCookie = getCookieByKey(document.cookie, "webflow-user-language");
   let language = langCookie ? langCookie.toLowerCase() : "en";
 
