@@ -172,9 +172,9 @@ const getDomainAppID = () => {
 };
 
 export const getServerUrl = () => {
-  if (typeof window.localStorage !== "undefined" && window.localStorage) {
+  try {
     return localStorage.getItem("config.server_url") || DEFAULT_SERVER_URL;
-  } else {
+  } catch {
     return DEFAULT_SERVER_URL;
   }
 };
