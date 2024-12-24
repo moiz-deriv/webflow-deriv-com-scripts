@@ -40,12 +40,12 @@ async function redirectToAuthorizationEndpoint() {
     localStorage.setItem("pkce_code_verifier", codeVerifier);
     localStorage.setItem("oauth_state", state);
 
-    const oidcConfig = JSON.parse(
-      localStorage.getItem("config.oidc_endpoints")
-    );
+    let oidcConfig = JSON.parse(localStorage.getItem("config.oidc_endpoints"));
 
     if (!oidcConfig || !oidcConfig.authorization_endpoint) {
-      fetchOIDCConfiguration(server_url ? server_url : "oauth.deriv.com");
+      oidcConfig = await fetchOIDCConfiguration(
+        server_url ? server_url : "oauth.deriv.com"
+      );
     }
 
     const authorizationUrl =
