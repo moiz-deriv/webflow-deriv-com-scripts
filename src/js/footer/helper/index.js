@@ -98,15 +98,6 @@ window.getAppId = () => {
     [window.staging_url]: window.domain_list_app_id[window.staging_url],
   };
 
-  if (typeof window.useGrowthbookFeatureFlag === "function") {
-    window.isTHLogin = window.useGrowthbookFeatureFlag({
-      featureFlag: "trigger_login_for_hub",
-    });
-    if (typeof window.isTHLogin === "boolean" && window.isTHLogin) {
-      return 61554;
-    }
-  }
-
   if (specificDomainAppId[domainUrl]) {
     return specificDomainAppId[domainUrl];
   }
@@ -182,6 +173,16 @@ export const getServerUrl = () => {
 export const loginUrl = () => {
   const server_url = getServerUrl();
   const langCookie = getCookieByKey(document.cookie, "webflow-user-language");
+  let appId = window.getAppId();
+
+  if (typeof window.useGrowthbookFeatureFlag === "function") {
+    window.isTHLogin = window.useGrowthbookFeatureFlag({
+      featureFlag: "trigger_login_for_hub",
+    });
+    if (typeof window.isTHLogin === "boolean" && window.isTHLogin) {
+      appId = 61554;
+    }
+  }
   let language = langCookie ? langCookie.toLowerCase() : "en";
 
   if (language === "zh-cn" || language === "zh-tw") {
@@ -206,7 +207,7 @@ export const loginUrl = () => {
   const sub_url = redirectToTradingPlatform() || "";
 
   if (server_url && /qa/.test(server_url)) {
-    return `https://${server_url}/oauth2/authorize?app_id=${window.getAppId()}&l=${language}&brand=deriv${affiliate_token_link}${cookies_link}&platform=${sub_url}`;
+    return `https://${server_url}/oauth2/authorize?app_id=${appId}&l=${language}&brand=deriv${affiliate_token_link}${cookies_link}&platform=${sub_url}`;
   }
   return `${window.getOauthUrl()}/oauth2/authorize?app_id=${getDomainAppID()}&l=${language}&brand=deriv${affiliate_token_link}${cookies_link}&platform=${sub_url}`;
 };
