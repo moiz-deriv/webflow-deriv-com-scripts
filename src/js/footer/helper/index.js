@@ -174,6 +174,7 @@ export const loginUrl = () => {
   const server_url = getServerUrl();
   const langCookie = getCookieByKey(document.cookie, "webflow-user-language");
   let appId = window.getAppId();
+  let domainAppId = getDomainAppID();
 
   if (typeof window.useGrowthbookFeatureFlag === "function") {
     window.isTHLogin = window.useGrowthbookFeatureFlag({
@@ -181,6 +182,7 @@ export const loginUrl = () => {
     });
     if (typeof window.isTHLogin === "boolean" && window.isTHLogin) {
       appId = 61554;
+      domainAppId = 61554;
     }
   }
   let language = langCookie ? langCookie.toLowerCase() : "en";
@@ -209,5 +211,5 @@ export const loginUrl = () => {
   if (server_url && /qa/.test(server_url)) {
     return `https://${server_url}/oauth2/authorize?app_id=${appId}&l=${language}&brand=deriv${affiliate_token_link}${cookies_link}&platform=${sub_url}`;
   }
-  return `${window.getOauthUrl()}/oauth2/authorize?app_id=${getDomainAppID()}&l=${language}&brand=deriv${affiliate_token_link}${cookies_link}&platform=${sub_url}`;
+  return `${window.getOauthUrl()}/oauth2/authorize?app_id=${domainAppId}&l=${language}&brand=deriv${affiliate_token_link}${cookies_link}&platform=${sub_url}`;
 };
