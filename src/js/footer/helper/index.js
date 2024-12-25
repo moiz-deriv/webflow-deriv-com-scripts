@@ -47,10 +47,15 @@ window.getOauthUrl = function () {
   return oauthUrl;
 };
 window.getClientCountry = function () {
+  const testImCountry = getCookieByKey(document.cookie, "test_im_country");
   const clientsCountry = getCookieByKey(document.cookie, "clients_country");
   const client_cookie = getCookieByKey(document.cookie, "client_information");
+
   if (!!client_cookie) {
     return JSON.parse(client_cookie)?.residence || clientsCountry;
+  }
+  if (testImCountry) {
+    return testImCountry;
   } else {
     return clientsCountry;
   }
