@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const messageType = "website_status";
   async function fetchCountryAndPopulateFooter() {
     try {
-      const response = await fetch("https://www.cloudflare.com/cdn-cgi/trace");
+      const response = await fetch("https://www.deriv.com/cdn-cgi/trace");
       const text = await response.text();
       const CloudflareCountry = Object.fromEntries(
         text.split("\n").map((v) => v.split("=", 2))
