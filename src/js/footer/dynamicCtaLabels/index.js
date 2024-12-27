@@ -51,7 +51,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         if (typeof window.isTHLogin === "boolean" && window.isTHLogin) {
           elements_logged_in.forEach((elements_logged_in) => {
-            elements_logged_in.href = "https://hub.deriv.com/tradershub/cfds";
+            if (window.location.href.includes("staging.deriv.com")) {
+              elements_logged_in.href =
+                "https://staging-hub.deriv.com/tradershub/cfds";
+            } else {
+              elements_logged_in.href = "https://hub.deriv.com/tradershub/cfds";
+            }
           });
         }
       }
