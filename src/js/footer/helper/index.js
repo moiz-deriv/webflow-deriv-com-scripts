@@ -47,10 +47,15 @@ window.getOauthUrl = function () {
   return oauthUrl;
 };
 window.getClientCountry = function () {
+  const testImCountry = getCookieByKey(document.cookie, "test_im_country");
   const clientsCountry = getCookieByKey(document.cookie, "clients_country");
   const client_cookie = getCookieByKey(document.cookie, "client_information");
+
   if (!!client_cookie) {
     return JSON.parse(client_cookie)?.residence || clientsCountry;
+  }
+  if (testImCountry) {
+    return testImCountry;
   } else {
     return clientsCountry;
   }
@@ -163,9 +168,10 @@ const getDomainAppID = () => {
 };
 
 export const getServerUrl = () => {
-  if (!!window?.localStorage) {
+  try {
     return localStorage.getItem("config.server_url") || DEFAULT_SERVER_URL;
-  } else {
+  } catch (error) {
+    console.warn("Warning: Error accessing localStorage:", error);
     return DEFAULT_SERVER_URL;
   }
 };
@@ -181,8 +187,13 @@ export const loginUrl = () => {
       featureFlag: "trigger_login_for_hub",
     });
     if (typeof window.isTHLogin === "boolean" && window.isTHLogin) {
-      appId = 61554;
-      domainAppId = 61554;
+      if (window.location.href.includes("staging.deriv.com")) {
+        appId = 61554;
+        domainAppId = 61554;
+      } else {
+        appId = 53503;
+        domainAppId = 53503;
+      }
     }
   }
   let language = langCookie ? langCookie.toLowerCase() : "en";
