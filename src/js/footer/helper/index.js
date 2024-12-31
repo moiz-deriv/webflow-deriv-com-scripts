@@ -188,11 +188,11 @@ export const loginUrl = () => {
     });
     if (typeof window.isTHLogin === "boolean" && window.isTHLogin) {
       if (window.location.href.includes("staging.deriv.com")) {
-        appId = 61554;
-        domainAppId = 61554;
-      } else {
         appId = 53503;
         domainAppId = 53503;
+      } else {
+        appId = 61554;
+        domainAppId = 61554;
       }
     }
   }
