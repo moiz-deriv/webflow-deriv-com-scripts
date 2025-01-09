@@ -45,22 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
         elements_logged_in.classList.remove("hide-element");
       });
 
-      if (typeof window.useGrowthbookFeatureFlag === "function") {
-        window.isTHLogin = window.useGrowthbookFeatureFlag({
-          featureFlag: "trigger_login_for_hub",
-        });
-        if (typeof window.isTHLogin === "boolean" && window.isTHLogin) {
-          elements_logged_in.forEach((elements_logged_in) => {
-            if (window.location.href.includes("staging.deriv.com")) {
-              elements_logged_in.href =
-                "https://staging-hub.deriv.com/tradershub/cfds";
-            } else {
-              elements_logged_in.href = "https://hub.deriv.com/tradershub/cfds";
-            }
-          });
-        }
-      }
-
       const elements_logged_out = document.querySelectorAll(".logged-out-btn");
 
       elements_logged_out.forEach((elements_logged_out) => {
